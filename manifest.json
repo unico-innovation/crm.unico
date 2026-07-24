@@ -1,0 +1,16 @@
+{
+  "name": "UNICO CRM — Presales & Ops Console",
+  "short_name": "UNICO CRM",
+  "description": "Lead management, sales pipeline, supply/inventory, finance and invoicing console for UNICO Innovation.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#F2F3F5",
+  "theme_color": "#F2F3F5",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
