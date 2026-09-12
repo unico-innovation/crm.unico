@@ -3159,8 +3159,7 @@ function printPurchaseOrder(id){
     <div class="row grand"><span>GRAND TOTAL</span><span>${inr(grand)}</span></div>`;
 
   const termsCol = termsListHtml(po.terms);
-  const bankCol = bankColumnHtml();
-  const bottomCols = (termsCol || bankCol) ? `<div class="lh-bottom-cols">${termsCol}${bankCol}</div>` : '';
+  const bottomCols = termsCol ? `<div class="lh-bottom-cols">${termsCol}</div>` : '';
 
   const body = `
     <div class="lh-top">
