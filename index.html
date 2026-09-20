@@ -1609,7 +1609,7 @@ async function pullFromCloud(silent){
       leads: json.leads||[], deals: json.deals||[], supply: (json.supply||[]).map(migrateSupplyItem), expenses: incomingExpenses,
       contacts: json.contacts||[], quotes: json.quotes||[], proformas: json.proformas||[], taxinvoices: json.taxinvoices||[],
       bankDetails: json.bankDetails||{}, companyProfile: json.companyProfile||{}, purchaseOrders: json.purchaseOrders||[], tasks: json.tasks||[],
-      accounts: json.accounts||[], vendors: json.vendors||[], _accountsSeeded: json._accountsSeeded, _vendorsSeeded: json._vendorsSeeded
+      accounts: json.accounts||[], vendors: json.vendors||[], appUsers: json.appUsers||[], _accountsSeeded: json._accountsSeeded, _vendorsSeeded: json._vendorsSeeded
     };
     seedAccountsAndVendors(DB);
     localStorage.setItem(STORE_KEY, JSON.stringify(DB));
