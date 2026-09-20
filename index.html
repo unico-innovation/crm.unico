@@ -31,7 +31,7 @@
     --red: #C6433F;
     --red-light: #FBEAEA;
     --gray-light: #F0F1F3;
-    --mono: "Consolas","Cascadia Mono","Courier New",monospace;
+    --mono: "Calibri","Segoe UI",sans-serif;
     --disp: "Calibri","Segoe UI",sans-serif;
     --body: "Calibri","Segoe UI",sans-serif;
   }
@@ -117,7 +117,7 @@
   }
   td{padding:9px 10px; border-bottom:1px solid var(--gray-light); vertical-align:middle;}
   tr:hover td{background:var(--gray-light);}
-  .num{font-family:var(--mono);}
+  .num{font-family:var(--mono); font-variant-numeric:tabular-nums;}
 
   .btn{
     font-family:var(--disp); font-weight:700; font-size:12.5px; letter-spacing:0.1px; padding:8px 15px;
@@ -171,7 +171,8 @@
     padding:10px 12px; border-bottom:1px solid var(--border); font-family:var(--disp); font-weight:700; font-size:12.5px;
     display:flex; justify-content:space-between; color:var(--text);
   }
-  .col-head .count{font-family:var(--mono); color:var(--muted); font-size:11px;}
+  .col-head .count{font-family:var(--mono); font-variant-numeric:tabular-nums; color:var(--muted); font-size:11px;}
+  .col-head .stage-value{font-family:var(--mono); font-variant-numeric:tabular-nums; color:var(--muted); font-weight:400; font-size:11px; margin-left:7px;}
   .col-body{padding:10px; overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:8px;}
   .card{
     background:var(--panel-2); border:1px solid var(--border); border-left:3px solid var(--purple);
@@ -180,7 +181,7 @@
   .card:active{cursor:grabbing;}
   .card .co{font-family:var(--disp); font-weight:700; font-size:13px; color:var(--text);}
   .card .meta{font-family:var(--body); font-size:11px; color:var(--muted); margin-top:4px;}
-  .card .val{font-family:var(--mono); font-size:12px; color:var(--teal); margin-top:6px;}
+  .card .val{font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:12px; color:var(--teal); margin-top:6px;}
   .card.dragging{opacity:0.4;}
   .col-body.dragover{background:var(--purple-light);}
 
@@ -239,7 +240,7 @@
   .item-row .details-input{width:100%; font-size:12px; margin-bottom:6px; min-height:44px;}
   .item-row .item-row-bottom{display:grid; grid-template-columns:70px 90px 110px 100px 30px; gap:8px; align-items:center;}
   .item-row .item-row-bottom label{font-size:9.5px; color:var(--muted); text-transform:uppercase; display:block; margin-bottom:2px;}
-  .item-row .amt-display{font-family:var(--mono); font-weight:700; text-align:right; padding-top:14px;}
+  .item-row .amt-display{font-family:var(--mono); font-variant-numeric:tabular-nums; font-weight:700; text-align:right; padding-top:14px;}
   .totals-line{font-family:var(--body); font-size:13px; color:var(--text); text-align:right; margin-top:10px; padding-top:10px; border-top:1px solid var(--border);}
   .company-group{margin-bottom:20px;}
   .company-group h3{font-family:var(--disp); font-weight:700; font-size:14px; color:var(--purple); margin:0 0 8px 0;}
@@ -294,7 +295,7 @@
   <div class="sidebar">
     <div class="brand">
       <img id="brandLogo" alt="UNICO" style="height:34px; display:block; margin-bottom:6px;">
-      <div class="sub">Presales &amp; Ops Console</div>
+      <div class="sub">Workplace of Innovation</div>
     </div>
     <ul class="nav">
       <li><button data-view="dashboard" class="active"><span class="tick">01</span><span class="label">Dashboard</span></button></li>
@@ -302,16 +303,19 @@
       <li><button data-view="pipeline"><span class="tick">03</span><span class="label">Sales Pipeline</span></button></li>
       <li><button data-view="supply"><span class="tick">04</span><span class="label">SCM</span></button></li>
       <li><button data-view="contacts"><span class="tick">05</span><span class="label">Contacts</span></button></li>
-      <li><button data-view="quotes"><span class="tick">06</span><span class="label">Quotations</span></button></li>
-      <li><button data-view="finance"><span class="tick">07</span><span class="label">Finance</span></button></li>
-      <li><button data-view="tasks"><span class="tick">08</span><span class="label">Tasks</span></button></li>
-      <li><button data-view="analytics"><span class="tick">09</span><span class="label">Analytics</span></button></li>
-      <li><button data-view="bankdetails"><span class="tick">10</span><span class="label">Bank Details</span></button></li>
-      <li><button data-view="data"><span class="tick">11</span><span class="label">Backup / Restore</span></button></li>
+      <li><button data-view="accounts"><span class="tick">06</span><span class="label">Accounts</span></button></li>
+      <li><button data-view="quotes"><span class="tick">07</span><span class="label">Quotations</span></button></li>
+      <li><button data-view="finance"><span class="tick">08</span><span class="label">Finance</span></button></li>
+      <li><button data-view="tasks"><span class="tick">09</span><span class="label">Tasks</span></button></li>
+      <li><button data-view="analytics"><span class="tick">10</span><span class="label">Analytics</span></button></li>
+      <li><button data-view="bankdetails"><span class="tick">11</span><span class="label">Bank Details</span></button></li>
+      <li><button data-view="data"><span class="tick">12</span><span class="label">Backup / Restore</span></button></li>
+      <li><button data-view="users"><span class="tick">13</span><span class="label">Users &amp; Access</span></button></li>
     </ul>
     <div class="sidebar-foot" id="sidebarFoot">
       DATA STORED LOCALLY<br>ON THIS BROWSER · NO<br>CLOUD SYNC
     </div>
+    <div class="sidebar-foot" id="sidebarUser" style="display:none; border-top:none; padding-top:0;"></div>
   </div>
 
   <div class="main">
@@ -359,6 +363,7 @@
             <option value="">All Industries</option>
             <option>Cement</option><option>Power</option><option>Steel</option><option>Refinery</option><option>Petrochemical</option><option>Chemical</option><option>Fertilizers</option><option>Wind</option><option>Paper</option><option>OEM</option><option>Automotive</option><option>EPC</option><option>System Integrator</option><option>Reseller</option><option>Other</option>
           </select>
+          <button class="btn small" id="exportLeadsBtn">Export to Excel</button>
           <button class="btn primary" id="addLeadBtn">+ New Lead</button>
         </div>
         <table>
@@ -395,6 +400,7 @@
       <div class="subtabs">
         <button data-stab="inventory" class="active">Inventory</button>
         <button data-stab="purchaseorders">Purchase Orders</button>
+        <button data-stab="vendors">Vendors</button>
       </div>
 
       <!-- INVENTORY SUBTAB -->
@@ -436,6 +442,22 @@
           <div class="pagination" id="poPagination"></div>
         </div>
       </div>
+
+      <!-- VENDORS SUBTAB -->
+      <div class="stab" id="stab-vendors" style="display:none;">
+        <div class="panel">
+          <div class="toolbar">
+            <input class="search" id="vendorSearch" placeholder="Search vendor, city...">
+            <button class="btn primary" id="addVendorBtn">+ New Vendor</button>
+          </div>
+          <table>
+            <thead><tr><th>Vendor</th><th>GSTIN</th><th>Contact</th><th>Phone</th><th>Email</th><th></th></tr></thead>
+            <tbody id="vendorTbody"></tbody>
+          </table>
+          <div class="empty" id="vendorEmpty" style="display:none;">No vendors yet — add one, or they'll appear automatically as you place Purchase Orders.</div>
+          <div class="pagination" id="vendorPagination"></div>
+        </div>
+      </div>
     </div>
 
     <!-- CONTACTS -->
@@ -452,12 +474,34 @@
             <option value="">All Industries</option>
             <option>Cement</option><option>Power</option><option>Steel</option><option>Refinery</option><option>Petrochemical</option><option>Chemical</option><option>Fertilizers</option><option>Wind</option><option>Paper</option><option>OEM</option><option>Automotive</option><option>EPC</option><option>System Integrator</option><option>Reseller</option><option>Other</option>
           </select>
+          <button class="btn small" id="exportContactsBtn">Export to Excel</button>
           <button class="btn primary" id="addContactBtn">+ New Contact</button>
         </div>
       </div>
       <div id="contactGroups"></div>
       <div class="empty panel" id="contactsEmpty" style="display:none;">No contacts yet. Add your first contact to start building your directory.</div>
       <div class="pagination" id="contactsPagination"></div>
+    </div>
+
+    <!-- ACCOUNTS -->
+    <div class="view" id="view-accounts" style="display:none;">
+      <div class="topbar">
+        <h1>Accounts</h1>
+        <div class="scale">TOTAL ACCOUNTS <span id="accountCountTop">0</span></div>
+      </div>
+      <div class="panel">
+        <div class="toolbar">
+          <input class="search" id="accountSearch" placeholder="Search company, city, state...">
+          <button class="btn small" id="exportAccountsBtn">Export to Excel</button>
+          <button class="btn primary" id="addAccountBtn">+ New Account</button>
+        </div>
+        <table>
+          <thead><tr><th>Company</th><th>City</th><th>State</th><th>Pincode</th><th></th></tr></thead>
+          <tbody id="accountTbody"></tbody>
+        </table>
+        <div class="empty" id="accountEmpty" style="display:none;">No accounts yet — add one, or they'll appear automatically as you add Contacts.</div>
+        <div class="pagination" id="accountPagination"></div>
+      </div>
     </div>
 
     <!-- QUOTATIONS -->
@@ -482,6 +526,7 @@
               <option value="">All Statuses</option>
               <option>Draft</option><option>Sent</option><option>Accepted</option><option>Rejected</option><option>Converted</option>
             </select>
+            <button class="btn small" id="exportQuotesBtn">Export to Excel</button>
             <button class="btn primary" id="addQuoteBtn">+ New Quotation</button>
           </div>
           <table>
@@ -618,6 +663,10 @@
         <div id="analyticsChart"></div>
       </div>
       <div class="panel">
+        <div class="panel-title"><span>Areas of Improvement — FY <span id="pieChartsFyLabel" style="color:var(--muted); font-weight:400;"></span></span></div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:18px;" id="pieChartsRow"></div>
+      </div>
+      <div class="panel">
         <div class="panel-title"><span>Monthly Statistics</span></div>
         <table>
           <thead><tr><th>Month</th><th>Revenue (Basic)</th><th>Cost + Expenses</th><th>Net P&amp;L</th><th>Order Booking</th><th>Leads Added</th><th>Deals Won</th><th>Expenses</th></tr></thead>
@@ -730,6 +779,25 @@
         <div class="panel-title"><span>Reset</span></div>
         <p style="color:var(--muted); font-size:13px; margin-top:0;">Erase all data on this device and start fresh. Export a backup first.</p>
         <button class="btn danger" id="resetBtn">Erase All Data</button>
+      </div>
+    </div>
+
+    <!-- USERS & ACCESS -->
+    <div class="view" id="view-users" style="display:none;">
+      <div class="topbar">
+        <h1>Users &amp; Access</h1>
+        <div class="scale">USERS <span id="userCountTop">0</span></div>
+      </div>
+      <div class="panel">
+        <p style="color:var(--muted); font-size:13px; margin-top:0;">Control which modules each teammate can see when they open the CRM through the shared Google sign-in link. You (the admin) always see everything. This only applies to people accessing the CRM via the Cloud Sync web app URL, signed in with their unico-innovation.in Google account — a copy of this file opened directly on a computer is not restricted.</p>
+        <div class="toolbar">
+          <button class="btn primary" id="addUserBtn">+ Add User</button>
+        </div>
+        <table>
+          <thead><tr><th>Name</th><th>Email</th><th>Access</th><th></th></tr></thead>
+          <tbody id="userTbody"></tbody>
+        </table>
+        <div class="empty" id="userEmpty" style="display:none;">No restricted users yet — add one to give a teammate limited access.</div>
       </div>
     </div>
 
@@ -928,6 +996,87 @@
   </div>
 </div>
 
+<div class="overlay" id="accountModal">
+  <div class="modal">
+    <h2 id="accountModalTitle">New Account</h2>
+    <input type="hidden" id="accountId">
+    <div class="field"><label>Company Name</label><input id="accountCompany"></div>
+    <div class="field"><label>Industry</label>
+      <select id="accountIndustry"><option>Cement</option><option>Power</option><option>Steel</option><option>Refinery</option><option>Petrochemical</option><option>Chemical</option><option>Fertilizers</option><option>Wind</option><option>Paper</option><option>OEM</option><option>Automotive</option><option>EPC</option><option>System Integrator</option><option>Reseller</option><option>Other</option></select>
+    </div>
+    <div class="field"><label>Company Address (street / locality)</label><input id="accountAddress"></div>
+    <div class="grid3">
+      <div class="field"><label>City</label><input id="accountCity"></div>
+      <div class="field"><label>State</label><input id="accountState"></div>
+      <div class="field"><label>Pincode</label><input id="accountPincode"></div>
+    </div>
+    <div class="field"><label>GSTIN</label><input id="accountGstin" placeholder="e.g. 27BWMPP6085P1ZE"></div>
+    <div class="modal-actions">
+      <button class="btn ghost" id="accountCancel">Cancel</button>
+      <button class="btn danger ghost" id="accountDelete" style="display:none;">Delete</button>
+      <button class="btn primary" id="accountSave">Save Account</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="accountDetailModal">
+  <div class="modal">
+    <h2 id="accountDetailTitle">Account</h2>
+    <div id="accountDetailAddress" style="font-family:var(--body); font-size:13px; color:var(--text); margin-bottom:14px; background:var(--panel-2); border:1px solid var(--border); border-radius:6px; padding:10px 12px;"></div>
+    <div id="accountDetailSections"></div>
+    <div class="modal-actions">
+      <button class="btn ghost" id="accountDetailClose">Close</button>
+      <button class="btn primary" id="accountDetailEdit">Edit Account</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="vendorModal">
+  <div class="modal">
+    <h2 id="vendorModalTitle">New Vendor</h2>
+    <input type="hidden" id="vendorId">
+    <div class="field"><label>Vendor Name</label><input id="vendorName"></div>
+    <div class="grid2">
+      <div class="field"><label>GSTIN</label><input id="vendorGstin"></div>
+      <div class="field"><label>Contact Person</label><input id="vendorContact"></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>Phone</label><input id="vendorPhone"></div>
+      <div class="field"><label>Email</label><input id="vendorEmail" type="email"></div>
+    </div>
+    <div class="field"><label>Address</label><input id="vendorAddress"></div>
+    <div class="modal-actions">
+      <button class="btn ghost" id="vendorCancel">Cancel</button>
+      <button class="btn danger ghost" id="vendorDelete" style="display:none;">Delete</button>
+      <button class="btn primary" id="vendorSave">Save Vendor</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="userModal">
+  <div class="modal">
+    <h2 id="userModalTitle">New User</h2>
+    <input type="hidden" id="userId">
+    <div class="grid2">
+      <div class="field"><label>Name</label><input id="userName"></div>
+      <div class="field"><label>Google Email (@unico-innovation.in)</label><input id="userEmail" type="email" placeholder="name@unico-innovation.in"></div>
+    </div>
+    <div class="field" style="display:flex; align-items:center; gap:8px; flex-direction:row;">
+      <input type="checkbox" id="userIsAdmin" style="width:16px; height:16px;">
+      <label style="margin:0; text-transform:none; font-weight:400; font-size:13px;">Full admin access (sees and can edit everything, including this screen)</label>
+    </div>
+    <div class="field">
+      <label>Modules this user can see</label>
+      <div id="userModuleChecks" class="grid3"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn ghost" id="userCancel">Cancel</button>
+      <button class="btn danger ghost" id="userDelete" style="display:none;">Delete</button>
+      <button class="btn primary" id="userSave">Save User</button>
+    </div>
+  </div>
+</div>
+
 <div class="overlay" id="quoteModal">
   <div class="modal wide">
     <h2 id="quoteModalTitle">New Quotation</h2>
@@ -938,10 +1087,16 @@
       <div class="field"><label>Validity (days)</label><input id="quoteValidity" type="number" min="0" value="15"></div>
     </div>
     <div class="grid2">
+      <div class="field"><label>Account <span style="text-transform:none; font-weight:400;">(select existing, or add new)</span></label>
+        <select id="quoteAccount"><option value="">— select an account —</option></select>
+      </div>
       <div class="field"><label>Contact</label>
         <select id="quoteContact"><option value="">— select a contact —</option></select>
       </div>
-      <div class="field"><label>Company</label><input id="quoteCompany" placeholder="auto-fills from contact, editable"></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>Company</label><input id="quoteCompany" placeholder="auto-fills from Account" readonly style="background:var(--panel-2);"></div>
+      <div></div>
     </div>
     <div class="grid2">
       <div class="field"><label>Contact Person</label><input id="quoteContactPerson"></div>
@@ -1088,7 +1243,7 @@
         <select id="taxInvDeal"><option value="">— none —</option></select>
       </div>
     </div>
-    <div id="taxInvGstBreakup" style="font-family:var(--mono); font-size:12px; color:var(--muted); margin-bottom:8px;"></div>
+    <div id="taxInvGstBreakup" style="font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:12px; color:var(--muted); margin-bottom:8px;"></div>
 
     <div class="field"><label>Status</label>
       <select id="taxInvStatus"><option>Draft</option><option>Sent</option><option>Paid</option><option>Overdue</option><option>Cancelled</option></select>
@@ -1117,13 +1272,18 @@
       </div>
     </div>
     <div class="grid2">
-      <div class="field"><label>Vendor Name</label><input id="poVendor" list="vendorSuggestions" placeholder="e.g. Precision Sensors Pvt Ltd"></div>
-      <datalist id="vendorSuggestions"></datalist>
-      <div class="field"><label>Vendor GSTIN (optional)</label><input id="poVendorGstin"></div>
+      <div class="field"><label>Vendor <span style="text-transform:none; font-weight:400;">(select existing, or add new)</span></label>
+        <select id="poVendorSelect"><option value="">— select a vendor —</option></select>
+      </div>
+      <div class="field"><label>Vendor Name</label><input id="poVendor" readonly style="background:var(--panel-2);" placeholder="auto-fills from Vendor"></div>
     </div>
     <div class="grid2">
+      <div class="field"><label>Vendor GSTIN (optional)</label><input id="poVendorGstin"></div>
       <div class="field"><label>Vendor Contact Person</label><input id="poVendorContact"></div>
-      <div class="field"><label>Vendor Phone / Email</label><input id="poVendorPhone" placeholder="phone or email"></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>Vendor Phone</label><input id="poVendorPhone" placeholder="phone"></div>
+      <div class="field"><label>Vendor Email</label><input id="poVendorEmail" type="email"></div>
     </div>
     <div class="field"><label>Vendor Address</label><input id="poVendorAddress"></div>
 
@@ -1208,14 +1368,33 @@
       <div id="printAddressChoiceOptions" style="display:flex; flex-direction:column; gap:6px; margin-top:4px;"></div>
     </div>
     <div class="field">
+      <label style="display:block; margin-bottom:6px;">Signature on this document</label>
+      <label style="display:flex; align-items:center; gap:8px; text-transform:none; font-weight:400; font-size:13.5px; color:var(--text); margin-bottom:6px;">
+        <input type="radio" name="printSignatureMode" id="printIncludeStamp" value="image" checked style="width:16px; height:16px;">
+        Include signature &amp; stamp image (makes the document authenticated)
+      </label>
       <label style="display:flex; align-items:center; gap:8px; text-transform:none; font-weight:400; font-size:13.5px; color:var(--text);">
-        <input type="checkbox" id="printIncludeStamp" checked style="width:16px; height:16px;">
-        Include signature &amp; stamp (makes the document authenticated)
+        <input type="radio" name="printSignatureMode" id="printDigitalSignature" value="digital" style="width:16px; height:16px;">
+        Digitally signed externally <span style="color:var(--muted);">(leave signature area blank — you'll sign the PDF yourself with your DSC afterward)</span>
       </label>
     </div>
     <div class="modal-actions">
       <button class="btn ghost" id="printOptionsCancel">Cancel</button>
       <button class="btn primary" id="printOptionsConfirm">Generate PDF</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="emailPreviewModal">
+  <div class="modal">
+    <h2>Email Preview</h2>
+    <div class="field"><label>To</label><input id="emailPreviewTo" type="email" placeholder="recipient@example.com"></div>
+    <div class="field"><label>Subject</label><input id="emailPreviewSubject"></div>
+    <div class="field"><label>Body</label><textarea id="emailPreviewBody" rows="10"></textarea></div>
+    <div id="emailPreviewNote" style="font-size:12px; color:var(--muted); margin-bottom:10px;"></div>
+    <div class="modal-actions">
+      <button class="btn ghost" id="emailPreviewCancel">Cancel</button>
+      <button class="btn primary" id="emailPreviewSend">Open in Email App</button>
     </div>
   </div>
 </div>
@@ -1241,10 +1420,57 @@ function loadData(){
       if(!d.tasks) d.tasks=[];
       if(!d.supply) d.supply=[];
       d.supply = d.supply.map(migrateSupplyItem);
+      if(!d.accounts) d.accounts=[];
+      if(!d.vendors) d.vendors=[];
+      if(!d.appUsers) d.appUsers=[];
+      seedAccountsAndVendors(d);
       return d;
     }
   }catch(e){}
-  return { leads: [], deals: [], supply: [], expenses: [], contacts: [], quotes: [], proformas: [], taxinvoices: [], bankDetails: {}, companyProfile: {}, purchaseOrders: [], tasks: [] };
+  const fresh = { leads: [], deals: [], supply: [], expenses: [], contacts: [], quotes: [], proformas: [], taxinvoices: [], bankDetails: {}, companyProfile: {}, purchaseOrders: [], tasks: [], accounts: [], vendors: [], appUsers: [] };
+  seedAccountsAndVendors(fresh);
+  return fresh;
+}
+function normCompanyKey(name){ return (name||'').trim().toLowerCase().replace(/\s+/g,' '); }
+function seedAccountsAndVendors(d){
+  // One-time, additive seed: build the Accounts master list from existing Contacts,
+  // and the Vendors master list from existing Purchase Orders + Supply price-lists.
+  // Never overwrites or removes anything already in d.accounts / d.vendors.
+  if(!d._accountsSeeded){
+    const seen = new Set((d.accounts||[]).map(a=>normCompanyKey(a.company)));
+    (d.contacts||[]).forEach(c=>{
+      const key = normCompanyKey(c.company);
+      if(!key || seen.has(key)) return;
+      seen.add(key);
+      d.accounts.push({
+        id: uid(), company: c.company, address: c.address||'', city: c.city||'',
+        state: c.state||'', pincode: c.pincode||'', gstin: c.gstin||'', industry: c.industry||'Other',
+        created: new Date().toISOString()
+      });
+    });
+    d._accountsSeeded = true;
+  }
+  if(!d._vendorsSeeded){
+    const seen = new Set((d.vendors||[]).map(v=>normCompanyKey(v.name)));
+    (d.purchaseOrders||[]).slice().sort((a,b)=>(a.date||'').localeCompare(b.date||'')).forEach(po=>{
+      const key = normCompanyKey(po.vendor);
+      if(!key || seen.has(key)) return;
+      seen.add(key);
+      d.vendors.push({
+        id: uid(), name: po.vendor, gstin: po.vendorGstin||'', contact: po.vendorContact||'',
+        phone: po.vendorPhone||'', email: '', address: po.vendorAddress||'', created: new Date().toISOString()
+      });
+    });
+    (d.supply||[]).forEach(s=>{
+      (s.priceList||[]).forEach(p=>{
+        const key = normCompanyKey(p.vendor);
+        if(!key || seen.has(key)) return;
+        seen.add(key);
+        d.vendors.push({ id: uid(), name: p.vendor, gstin:'', contact:'', phone:'', email:'', address:'', created: new Date().toISOString() });
+      });
+    });
+    d._vendorsSeeded = true;
+  }
 }
 function migrateSupplyItem(s){
   if(!s.priceList){
@@ -1263,6 +1489,59 @@ function loadCloudConfig(){
 let DB = loadData();
 let CLOUD = loadCloudConfig();
 let cloudPollTimer = null;
+
+/* ---------- ACCESS CONTROL (Google-identity-gated web app mode) ----------
+   When this file is opened directly (double-clicked, or as a plain hosted
+   file), window.__UNICO_MODULES__ is never set, so APP_RESTRICTED is false
+   and every module is visible exactly as before — nothing changes for the
+   admin's own day-to-day copy.
+   When the SAME file is instead served through the Apps Script "Index"
+   web app (see Code.gs), the server injects the signed-in Google user's
+   email, admin flag and permitted module list before this script runs. */
+const MODULE_LIST = [
+  { key:'dashboard',   label:'Dashboard' },
+  { key:'leads',       label:'Leads' },
+  { key:'pipeline',    label:'Sales Pipeline' },
+  { key:'supply',      label:'SCM (Inventory / PO / Vendors)' },
+  { key:'contacts',    label:'Contacts' },
+  { key:'accounts',    label:'Accounts' },
+  { key:'quotes',      label:'Quotations (incl. Proforma / Tax Invoice)' },
+  { key:'finance',     label:'Finance' },
+  { key:'tasks',       label:'Tasks' },
+  { key:'analytics',   label:'Analytics' },
+  { key:'bankdetails', label:'Bank Details' },
+  { key:'data',        label:'Backup / Restore' }
+];
+const DEFAULT_RESTRICTED_MODULES = { dashboard:false, leads:true, pipeline:true, supply:false, contacts:true, accounts:true, quotes:true, finance:false, tasks:true, analytics:false, bankdetails:true, data:false };
+const APP_RESTRICTED = (typeof window.__UNICO_MODULES__ !== 'undefined' && window.__UNICO_MODULES__ !== null);
+const APP_USER_EMAIL = (typeof window.__UNICO_USER_EMAIL__ !== 'undefined' && window.__UNICO_USER_EMAIL__) ? window.__UNICO_USER_EMAIL__ : null;
+const APP_IS_ADMIN = APP_RESTRICTED ? !!window.__UNICO_IS_ADMIN__ : true;
+const APP_MODULES = APP_RESTRICTED ? (window.__UNICO_MODULES__||{}) : null;
+function moduleAllowed(key){ return !APP_RESTRICTED || APP_IS_ADMIN || !!(APP_MODULES && APP_MODULES[key]); }
+function applyAccessControl(){
+  const userNav = document.querySelector('.nav button[data-view="users"]');
+  if(userNav) userNav.closest('li').style.display = APP_IS_ADMIN ? '' : 'none';
+  MODULE_LIST.forEach(m=>{
+    const btn = document.querySelector('.nav button[data-view="'+m.key+'"]');
+    if(!btn) return;
+    btn.closest('li').style.display = moduleAllowed(m.key) ? '' : 'none';
+  });
+  const activeBtn = document.querySelector('.nav button.active');
+  const activeHidden = activeBtn && activeBtn.closest('li').style.display==='none';
+  if(!activeBtn || activeHidden){
+    const firstVisible = Array.from(document.querySelectorAll('.nav button')).find(b=>b.closest('li').style.display!=='none');
+    if(firstVisible) firstVisible.click();
+  }
+  const userTag = document.getElementById('sidebarUser');
+  if(userTag){
+    if(APP_RESTRICTED && APP_USER_EMAIL){
+      userTag.style.display='block';
+      userTag.innerHTML = 'SIGNED IN AS<br>'+esc(APP_USER_EMAIL)+(APP_IS_ADMIN? ' (admin)':'');
+    } else {
+      userTag.style.display='none';
+    }
+  }
+}
 
 function saveData(){
   localStorage.setItem(STORE_KEY, JSON.stringify(DB));
@@ -1329,8 +1608,10 @@ async function pullFromCloud(silent){
     DB = {
       leads: json.leads||[], deals: json.deals||[], supply: (json.supply||[]).map(migrateSupplyItem), expenses: incomingExpenses,
       contacts: json.contacts||[], quotes: json.quotes||[], proformas: json.proformas||[], taxinvoices: json.taxinvoices||[],
-      bankDetails: json.bankDetails||{}, companyProfile: json.companyProfile||{}, purchaseOrders: json.purchaseOrders||[], tasks: json.tasks||[]
+      bankDetails: json.bankDetails||{}, companyProfile: json.companyProfile||{}, purchaseOrders: json.purchaseOrders||[], tasks: json.tasks||[],
+      accounts: json.accounts||[], vendors: json.vendors||[], _accountsSeeded: json._accountsSeeded, _vendorsSeeded: json._vendorsSeeded
     };
+    seedAccountsAndVendors(DB);
     localStorage.setItem(STORE_KEY, JSON.stringify(DB));
     render();
     setSyncStatus('Synced '+new Date().toLocaleTimeString(), true);
@@ -1378,6 +1659,84 @@ function toast(msg){
 }
 function inr(n){ n=Number(n)||0; return '₹'+n.toLocaleString('en-IN'); }
 
+/* ---------- EMAIL (mailto-based, personalized, editable before sending) ---------- */
+const emailPreviewModal = document.getElementById('emailPreviewModal');
+document.getElementById('emailPreviewCancel').addEventListener('click',()=>emailPreviewModal.classList.remove('show'));
+function openEmailPreview(to, subject, body, note){
+  document.getElementById('emailPreviewTo').value = to||'';
+  document.getElementById('emailPreviewSubject').value = subject||'';
+  document.getElementById('emailPreviewBody').value = body||'';
+  document.getElementById('emailPreviewNote').textContent = note||'';
+  emailPreviewModal.classList.add('show');
+}
+document.getElementById('emailPreviewSend').addEventListener('click',()=>{
+  const to = document.getElementById('emailPreviewTo').value.trim();
+  if(!to){ toast('Please enter a recipient email address'); return; }
+  const subject = document.getElementById('emailPreviewSubject').value;
+  const body = document.getElementById('emailPreviewBody').value;
+  const mailto = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  window.location.href = mailto;
+  emailPreviewModal.classList.remove('show');
+});
+function emailSenderName(){ return (DB.companyProfile||{}).contactPerson || 'UNICO Innovation'; }
+function emailContactIntro(id){
+  const c = DB.contacts.find(x=>x.id===id);
+  if(!c){ toast('Contact not found'); return; }
+  const subject = `Introduction – UNICO Innovation | Vibration Monitoring Solutions`;
+  const body = `Dear ${c.name||'Sir/Madam'},
+
+Greetings from UNICO Innovation.
+
+We specialize in vibration monitoring systems and sensors for the power, steel, refinery, and petrochemical sectors, and would welcome the opportunity to work with ${c.company||'your organization'}.
+
+We'd be glad to share more details about our product range and discuss how we can support your requirements.
+
+Looking forward to your response.
+
+Best regards,
+${emailSenderName()}
+UNICO Innovation`;
+  openEmailPreview(c.email||'', subject, body, '');
+}
+function emailDocument(type, id){
+  const collections = { quote: DB.quotes, proforma: DB.proformas, taxinvoice: DB.taxinvoices };
+  const doc = (collections[type]||[]).find(x=>x.id===id);
+  if(!doc){ toast('Document not found'); return; }
+  const labels = { quote:'Quotation', proforma:'Proforma Invoice', taxinvoice:'Tax Invoice' };
+  const label = labels[type];
+  const contact = DB.contacts.find(c=>c.id===doc.contactId);
+  const toEmail = (contact&&contact.email) || '';
+  const contactName = doc.contactPerson || (contact&&contact.name) || 'Sir/Madam';
+  const subject = `${label} ${doc.number} – UNICO Innovation`;
+  const body = `Dear ${contactName},
+
+Please find the ${label.toLowerCase()} ${doc.number} dated ${doc.date||''} attached for your reference.
+
+Kindly review and let us know if you have any questions.
+
+Best regards,
+${emailSenderName()}
+UNICO Innovation`;
+  openPrintOptions(type, id);
+  openEmailPreview(toEmail, subject, body, 'A print-ready copy has opened in another tab — use "Print / Save as PDF" there, then attach the saved file here before sending.');
+}
+function emailPurchaseOrder(id){
+  const po = DB.purchaseOrders.find(x=>x.id===id);
+  if(!po){ toast('Purchase order not found'); return; }
+  const subject = `Purchase Order ${po.number} – UNICO Innovation`;
+  const body = `Dear ${po.vendorContact||'Sir/Madam'},
+
+Please find our Purchase Order ${po.number} dated ${po.date||''} attached.
+
+Kindly confirm receipt and the expected delivery timeline.
+
+Best regards,
+${emailSenderName()}
+UNICO Innovation`;
+  openPrintOptions('po', id);
+  openEmailPreview(po.vendorEmail||'', subject, body, 'A print-ready copy has opened in another tab — use "Print / Save as PDF" there, then attach the saved file here before sending.');
+}
+
 /* ---------- FINANCIAL YEAR (India: April - March) ---------- */
 function fyLabel(startYear){ return startYear + '-' + String((startYear+1)%100).padStart(2,'0'); }
 function fyStartYearOf(dateStr){
@@ -1407,8 +1766,100 @@ function populateFYFilter(){
 document.getElementById('fyFilter').addEventListener('change', e=>{
   selectedFYStartYear = Number(e.target.value);
   renderDashboard();
+  renderAnalytics();
 });
 function esc(s){ return (s||'').toString().replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* ---------- MINIMAL XLSX EXPORT (hand-built ZIP + OOXML, no external library, fully offline) ---------- */
+function crc32(bytes){
+  if(!crc32.table){
+    const t=[];
+    for(let n=0;n<256;n++){
+      let c=n;
+      for(let k=0;k<8;k++){ c = (c&1)? (0xEDB88320 ^ (c>>>1)) : (c>>>1); }
+      t[n]=c>>>0;
+    }
+    crc32.table=t;
+  }
+  let crc = 0xFFFFFFFF;
+  for(let i=0;i<bytes.length;i++){ crc = (crc>>>8) ^ crc32.table[(crc ^ bytes[i]) & 0xFF]; }
+  return (crc ^ 0xFFFFFFFF) >>> 0;
+}
+function strToBytes(str){ return new TextEncoder().encode(str); }
+function buildZip(files){
+  // Builds a valid ZIP archive using the "stored" (uncompressed) method, so no
+  // deflate implementation is needed — just correct headers, offsets and CRC32s.
+  const localParts=[], centralParts=[]; let offset=0;
+  files.forEach(f=>{
+    const nameBytes = strToBytes(f.name);
+    const data = f.data;
+    const crc = crc32(data);
+    const size = data.length;
+    const local = new Uint8Array(30 + nameBytes.length);
+    const dv = new DataView(local.buffer);
+    dv.setUint32(0, 0x04034b50, true); dv.setUint16(4, 20, true); dv.setUint16(6, 0, true);
+    dv.setUint16(8, 0, true); dv.setUint16(10, 0, true); dv.setUint16(12, 0x21, true);
+    dv.setUint32(14, crc, true); dv.setUint32(18, size, true); dv.setUint32(22, size, true);
+    dv.setUint16(26, nameBytes.length, true); dv.setUint16(28, 0, true);
+    local.set(nameBytes, 30);
+    localParts.push(local, data);
+    const central = new Uint8Array(46 + nameBytes.length);
+    const cdv = new DataView(central.buffer);
+    cdv.setUint32(0, 0x02014b50, true); cdv.setUint16(4, 20, true); cdv.setUint16(6, 20, true);
+    cdv.setUint16(8, 0, true); cdv.setUint16(10, 0, true); cdv.setUint16(12, 0, true); cdv.setUint16(14, 0x21, true);
+    cdv.setUint32(16, crc, true); cdv.setUint32(20, size, true); cdv.setUint32(24, size, true);
+    cdv.setUint16(28, nameBytes.length, true); cdv.setUint16(30, 0, true); cdv.setUint16(32, 0, true);
+    cdv.setUint16(34, 0, true); cdv.setUint16(36, 0, true); cdv.setUint32(38, 0, true);
+    cdv.setUint32(42, offset, true);
+    central.set(nameBytes, 46);
+    centralParts.push(central);
+    offset += local.length + data.length;
+  });
+  const centralStart = offset;
+  const centralSize = centralParts.reduce((s,c)=>s+c.length,0);
+  const end = new Uint8Array(22);
+  const edv = new DataView(end.buffer);
+  edv.setUint32(0, 0x06054b50, true); edv.setUint16(4,0,true); edv.setUint16(6,0,true);
+  edv.setUint16(8, files.length, true); edv.setUint16(10, files.length, true);
+  edv.setUint32(12, centralSize, true); edv.setUint32(16, centralStart, true); edv.setUint16(20,0,true);
+  const allParts = [...localParts, ...centralParts, end];
+  const total = allParts.reduce((s,p)=>s+p.length,0);
+  const out = new Uint8Array(total);
+  let pos=0; allParts.forEach(p=>{ out.set(p,pos); pos+=p.length; });
+  return out;
+}
+function xmlEscape(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function colLetter(n){ let s=''; n++; while(n>0){ const m=(n-1)%26; s=String.fromCharCode(65+m)+s; n=Math.floor((n-1)/26); } return s; }
+function exportToXlsx(sheetName, headers, rows){
+  const allRows = [headers, ...rows];
+  const rowsXml = allRows.map((row,ri)=>{
+    const cells = row.map((val,ci)=>{
+      const ref = colLetter(ci)+(ri+1);
+      if(typeof val === 'number' && isFinite(val)) return `<c r="${ref}"><v>${val}</v></c>`;
+      return `<c r="${ref}" t="inlineStr"><is><t xml:space="preserve">${xmlEscape(val)}</t></is></c>`;
+    }).join('');
+    return `<row r="${ri+1}">${cells}</row>`;
+  }).join('');
+  const sheetXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>${rowsXml}</sheetData></worksheet>`;
+  const contentTypes = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>`;
+  const rootRels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`;
+  const workbookXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="${xmlEscape(sheetName).slice(0,31)}" sheetId="1" r:id="rId1"/></sheets></workbook>`;
+  const workbookRels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/></Relationships>`;
+  const files = [
+    {name:'[Content_Types].xml', data:strToBytes(contentTypes)},
+    {name:'_rels/.rels', data:strToBytes(rootRels)},
+    {name:'xl/workbook.xml', data:strToBytes(workbookXml)},
+    {name:'xl/_rels/workbook.xml.rels', data:strToBytes(workbookRels)},
+    {name:'xl/worksheets/sheet1.xml', data:strToBytes(sheetXml)}
+  ];
+  const zipBytes = buildZip(files);
+  const blob = new Blob([zipBytes], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = sheetName.replace(/[^a-z0-9]+/gi,'_') + '.xlsx';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url), 2000);
+}
 
 /* ---------- PAGINATION (generic, reused by every list view) ---------- */
 const PAGE_SIZE = 25;
@@ -1576,6 +2027,10 @@ function renderLeads(){
 }
 document.getElementById('leadSearch').addEventListener('input',()=>{ paginationState.leads=1; render(); });
 document.getElementById('leadSectorFilter').addEventListener('change',()=>{ paginationState.leads=1; render(); });
+document.getElementById('exportLeadsBtn').addEventListener('click',()=>{
+  exportToXlsx('Leads', ['Date Added','Company','Contact','Industry','Product Interest','Source','Status'],
+    DB.leads.map(l=>[l.created? l.created.slice(0,10):'', l.company||'', l.contact||'', l.sector||'', l.product||'', l.source||'', l.status||'']));
+});
 
 /* ---------- PIPELINE ---------- */
 const STAGES = ["New Inquiry","Qualified","Technical Discussion","Quotation Sent","Negotiation","PO Received","Lost"];
@@ -1654,9 +2109,10 @@ function renderPipeline(){
   let total=0;
   STAGES.forEach(stage=>{
     const items = DB.deals.filter(d=>d.stage===stage);
-    if(stage!=='Lost' && stage!=='PO Received') total += items.reduce((s,d)=>s+d.value,0);
+    const stageTotal = items.reduce((s,d)=>s+d.value,0);
+    if(stage!=='Lost' && stage!=='PO Received') total += stageTotal;
     const col=document.createElement('div'); col.className='col';
-    col.innerHTML = `<div class="col-head"><span>${stage}</span><span class="count">${items.length}</span></div>
+    col.innerHTML = `<div class="col-head"><span>${stage}<span class="stage-value">${inr(stageTotal)}</span></span><span class="count">${items.length}</span></div>
       <div class="col-body" data-stage="${stage}"></div>`;
     board.appendChild(col);
     const body=col.querySelector('.col-body');
@@ -1867,7 +2323,7 @@ function renderContacts(){
             <td><span class="badge tech">${esc(c.department)}</span></td>
             <td>${esc(c.name)}</td><td>${esc(c.designation||'—')}</td>
             <td class="num">${esc(c.phone||'—')}</td><td>${esc(c.email||'—')}</td>
-            <td class="rowbtns"><button class="btn small" data-edit="${c.id}">Edit</button></td>
+            <td class="rowbtns"><button class="btn small" data-email="${c.id}">Email</button> <button class="btn small" data-edit="${c.id}">Edit</button></td>
           </tr>`).join('')}
         </tbody>
       </table>`;
@@ -1875,12 +2331,240 @@ function renderContacts(){
     div.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>{
       openContactModal(DB.contacts.find(x=>x.id===b.dataset.edit));
     }));
+    div.querySelectorAll('[data-email]').forEach(b=>b.addEventListener('click',()=>{
+      emailContactIntro(b.dataset.email);
+    }));
   });
   renderPaginationControls('contactsPagination', 'contacts', pageInfo, renderContacts);
 }
 document.getElementById('contactSearch').addEventListener('input',()=>{ paginationState.contacts=1; render(); });
 document.getElementById('contactCompanyFilter').addEventListener('change',()=>{ paginationState.contacts=1; render(); });
 document.getElementById('contactIndustryFilter').addEventListener('change',()=>{ paginationState.contacts=1; render(); });
+document.getElementById('exportContactsBtn').addEventListener('click',()=>{
+  exportToXlsx('Contacts', ['Company','Industry','Department','Designation','Name','Phone','Email','City','State'],
+    DB.contacts.map(c=>[c.company||'', c.industry||'', c.department||'', c.designation||'', c.name||'', c.phone||'', c.email||'', c.city||'', c.state||'']));
+});
+
+/* ---------- ACCOUNTS ---------- */
+const accountModal=document.getElementById('accountModal');
+const accountDetailModal=document.getElementById('accountDetailModal');
+document.getElementById('addAccountBtn').addEventListener('click',()=>openAccountModal());
+document.getElementById('accountCancel').addEventListener('click',()=>accountModal.classList.remove('show'));
+function accountsForCompanyKey(key){ return DB.accounts.filter(a=>normCompanyKey(a.company)===key); }
+function openAccountModal(a){
+  document.getElementById('accountModalTitle').textContent = a? 'Edit Account':'New Account';
+  document.getElementById('accountId').value = a? a.id:'';
+  document.getElementById('accountCompany').value = a? a.company:'';
+  document.getElementById('accountIndustry').value = a? (a.industry||'Other'):'Other';
+  document.getElementById('accountAddress').value = a? (a.address||''):'';
+  document.getElementById('accountCity').value = a? (a.city||''):'';
+  document.getElementById('accountState').value = a? (a.state||''):'';
+  document.getElementById('accountPincode').value = a? (a.pincode||''):'';
+  document.getElementById('accountGstin').value = a? (a.gstin||''):'';
+  document.getElementById('accountDelete').style.display = a? 'inline-block':'none';
+  accountModal.classList.add('show');
+}
+document.getElementById('accountSave').addEventListener('click',()=>{
+  const id=document.getElementById('accountId').value;
+  const company=document.getElementById('accountCompany').value.trim();
+  if(!company){ toast('Company name is required'); return; }
+  const obj={
+    id:id||uid(), company,
+    industry:document.getElementById('accountIndustry').value,
+    address:document.getElementById('accountAddress').value.trim(),
+    city:document.getElementById('accountCity').value.trim(),
+    state:document.getElementById('accountState').value.trim(),
+    pincode:document.getElementById('accountPincode').value.trim(),
+    gstin:document.getElementById('accountGstin').value.trim(),
+    created: id? (DB.accounts.find(x=>x.id===id)||{}).created : new Date().toISOString()
+  };
+  if(id){ DB.accounts = DB.accounts.map(x=>x.id===id?obj:x); } else { DB.accounts.push(obj); }
+  accountModal.classList.remove('show'); saveData(); toast('Account saved');
+  if(typeof onAccountSaved==='function') onAccountSaved(obj);
+});
+document.getElementById('accountDelete').addEventListener('click',()=>{
+  const id=document.getElementById('accountId').value;
+  DB.accounts = DB.accounts.filter(x=>x.id!==id);
+  accountModal.classList.remove('show'); saveData(); toast('Account deleted');
+});
+function openAccountDetail(a){
+  document.getElementById('accountDetailTitle').textContent = a.company;
+  document.getElementById('accountDetailAddress').innerHTML =
+    `${esc(a.address||'—')}<br>${esc([a.city,a.state,a.pincode].filter(Boolean).join(', ')||'—')}
+     <br>GSTIN: ${esc(a.gstin||'—')} &nbsp;·&nbsp; Industry: ${esc(a.industry||'Other')}`;
+  const key = normCompanyKey(a.company);
+  const contacts = DB.contacts.filter(c=>normCompanyKey(c.company)===key);
+  const deals = DB.deals.filter(d=>normCompanyKey(d.company)===key);
+  const quotes = DB.quotes.filter(q=>normCompanyKey(q.company)===key);
+  const proformas = DB.proformas.filter(p=>normCompanyKey(p.company)===key);
+  const taxinvoices = DB.taxinvoices.filter(t=>normCompanyKey(t.company)===key);
+  const section = (title, rows) => rows.length? `<div style="margin-top:12px;"><h3 style="font-family:var(--disp); font-size:13px; color:var(--purple); margin:0 0 6px 0;">${title} (${rows.length})</h3><div style="font-size:12.5px; color:var(--text);">${rows.join('<br>')}</div></div>` : '';
+  document.getElementById('accountDetailSections').innerHTML =
+    section('Contacts', contacts.map(c=>`${esc(c.name)} — ${esc(c.designation||c.department)} · ${esc(c.phone||'')} ${esc(c.email||'')}`)) +
+    section('Deals', deals.map(d=>`${esc(d.stage)} — ${inr(d.value)} ${esc(d.product||'')}`)) +
+    section('Quotations', quotes.map(q=>`${esc(q.number)} — ${esc(q.date||'')} · ${inr(itemsSubtotal(q.items))}`)) +
+    section('Proforma Invoices', proformas.map(p=>`${esc(p.number)} — ${esc(p.date||'')}`)) +
+    section('Tax Invoices', taxinvoices.map(t=>`${esc(t.number)} — ${esc(t.date||'')} · ${esc(t.status||'')}`)) +
+    (!contacts.length && !deals.length && !quotes.length && !proformas.length && !taxinvoices.length
+      ? '<div style="color:var(--muted); font-size:12.5px; margin-top:8px;">No linked records yet.</div>' : '');
+  accountDetailModal.dataset.accountId = a.id;
+  accountDetailModal.classList.add('show');
+}
+document.getElementById('accountDetailClose').addEventListener('click',()=>accountDetailModal.classList.remove('show'));
+document.getElementById('accountDetailEdit').addEventListener('click',()=>{
+  const a = DB.accounts.find(x=>x.id===accountDetailModal.dataset.accountId);
+  accountDetailModal.classList.remove('show');
+  if(a) openAccountModal(a);
+});
+function renderAccounts(){
+  const search=(document.getElementById('accountSearch').value||'').toLowerCase();
+  let rows = DB.accounts.filter(a=>{
+    const hay=(a.company+' '+(a.city||'')+' '+(a.state||'')).toLowerCase();
+    return hay.includes(search);
+  }).sort((a,b)=>a.company.localeCompare(b.company));
+  document.getElementById('accountCountTop').textContent = DB.accounts.length;
+  document.getElementById('accountEmpty').style.display = rows.length? 'none':'block';
+  const tbody=document.getElementById('accountTbody'); tbody.innerHTML='';
+  const pageInfo = paginateRows('account', rows);
+  pageInfo.pageRows.forEach(a=>{
+    const tr=document.createElement('tr'); tr.style.cursor='pointer';
+    tr.innerHTML = `<td>${esc(a.company)}</td><td>${esc(a.city||'—')}</td><td>${esc(a.state||'—')}</td><td class="num">${esc(a.pincode||'—')}</td>
+      <td class="rowbtns"><button class="btn small" data-view-account="${a.id}">View</button></td>`;
+    tbody.appendChild(tr);
+  });
+  tbody.querySelectorAll('[data-view-account]').forEach(b=>b.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    openAccountDetail(DB.accounts.find(x=>x.id===b.dataset.viewAccount));
+  }));
+  tbody.querySelectorAll('tr').forEach((tr,i)=>tr.addEventListener('click',()=>openAccountDetail(pageInfo.pageRows[i])));
+  renderPaginationControls('accountPagination', 'account', pageInfo, renderAccounts);
+}
+document.getElementById('accountSearch').addEventListener('input',()=>{ paginationState.account=1; render(); });
+document.getElementById('exportAccountsBtn').addEventListener('click',()=>{
+  exportToXlsx('Accounts', ['Company','Industry','Address','City','State','Pincode','GSTIN'],
+    DB.accounts.map(a=>[a.company,a.industry||'',a.address||'',a.city||'',a.state||'',a.pincode||'',a.gstin||'']));
+});
+
+/* ---------- VENDORS ---------- */
+const vendorModal=document.getElementById('vendorModal');
+document.getElementById('addVendorBtn').addEventListener('click',()=>openVendorModal());
+document.getElementById('vendorCancel').addEventListener('click',()=>vendorModal.classList.remove('show'));
+function openVendorModal(v){
+  document.getElementById('vendorModalTitle').textContent = v? 'Edit Vendor':'New Vendor';
+  document.getElementById('vendorId').value = v? v.id:'';
+  document.getElementById('vendorName').value = v? v.name:'';
+  document.getElementById('vendorGstin').value = v? (v.gstin||''):'';
+  document.getElementById('vendorContact').value = v? (v.contact||''):'';
+  document.getElementById('vendorPhone').value = v? (v.phone||''):'';
+  document.getElementById('vendorEmail').value = v? (v.email||''):'';
+  document.getElementById('vendorAddress').value = v? (v.address||''):'';
+  document.getElementById('vendorDelete').style.display = v? 'inline-block':'none';
+  vendorModal.classList.add('show');
+}
+document.getElementById('vendorSave').addEventListener('click',()=>{
+  const id=document.getElementById('vendorId').value;
+  const name=document.getElementById('vendorName').value.trim();
+  if(!name){ toast('Vendor name is required'); return; }
+  const obj={
+    id:id||uid(), name,
+    gstin:document.getElementById('vendorGstin').value.trim(),
+    contact:document.getElementById('vendorContact').value.trim(),
+    phone:document.getElementById('vendorPhone').value.trim(),
+    email:document.getElementById('vendorEmail').value.trim(),
+    address:document.getElementById('vendorAddress').value.trim(),
+    created: id? (DB.vendors.find(x=>x.id===id)||{}).created : new Date().toISOString()
+  };
+  if(id){ DB.vendors = DB.vendors.map(x=>x.id===id?obj:x); } else { DB.vendors.push(obj); }
+  vendorModal.classList.remove('show'); saveData(); toast('Vendor saved');
+  if(typeof onVendorSaved==='function') onVendorSaved(obj);
+});
+document.getElementById('vendorDelete').addEventListener('click',()=>{
+  const id=document.getElementById('vendorId').value;
+  DB.vendors = DB.vendors.filter(x=>x.id!==id);
+  vendorModal.classList.remove('show'); saveData(); toast('Vendor deleted');
+});
+function renderVendors(){
+  const search=(document.getElementById('vendorSearch').value||'').toLowerCase();
+  let rows = DB.vendors.filter(v=>(v.name+' '+(v.address||'')).toLowerCase().includes(search))
+    .sort((a,b)=>a.name.localeCompare(b.name));
+  document.getElementById('vendorEmpty').style.display = rows.length? 'none':'block';
+  const tbody=document.getElementById('vendorTbody'); tbody.innerHTML='';
+  const pageInfo = paginateRows('vendor', rows);
+  pageInfo.pageRows.forEach(v=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML = `<td>${esc(v.name)}</td><td>${esc(v.gstin||'—')}</td><td>${esc(v.contact||'—')}</td><td>${esc(v.phone||'—')}</td><td>${esc(v.email||'—')}</td>
+      <td class="rowbtns"><button class="btn small" data-edit="${v.id}">Edit</button></td>`;
+    tbody.appendChild(tr);
+  });
+  tbody.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>{
+    openVendorModal(DB.vendors.find(x=>x.id===b.dataset.edit));
+  }));
+  renderPaginationControls('vendorPagination', 'vendor', pageInfo, renderVendors);
+}
+document.getElementById('vendorSearch').addEventListener('input',()=>{ paginationState.vendor=1; render(); });
+
+/* ---------- USERS & ACCESS ---------- */
+const userModal=document.getElementById('userModal');
+document.getElementById('addUserBtn').addEventListener('click',()=>openUserModal());
+document.getElementById('userCancel').addEventListener('click',()=>userModal.classList.remove('show'));
+document.getElementById('userIsAdmin').addEventListener('change',(e)=>{
+  document.getElementById('userModuleChecks').querySelectorAll('input[type="checkbox"]').forEach(cb=>{ cb.disabled = e.target.checked; });
+});
+function openUserModal(u){
+  document.getElementById('userModalTitle').textContent = u? 'Edit User':'New User';
+  document.getElementById('userId').value = u? u.id:'';
+  document.getElementById('userName').value = u? (u.name||''):'';
+  document.getElementById('userEmail').value = u? (u.email||''):'';
+  document.getElementById('userIsAdmin').checked = u? !!u.isAdmin : false;
+  const modules = u? Object.assign({}, DEFAULT_RESTRICTED_MODULES, u.modules||{}) : Object.assign({}, DEFAULT_RESTRICTED_MODULES);
+  const wrap = document.getElementById('userModuleChecks');
+  wrap.innerHTML = MODULE_LIST.map(m=>`
+    <label style="display:flex; align-items:center; gap:8px; text-transform:none; font-weight:400; font-size:13px; color:var(--text);">
+      <input type="checkbox" data-mod="${m.key}" ${modules[m.key]? 'checked':''} style="width:16px; height:16px;"> ${esc(m.label)}
+    </label>`).join('');
+  wrap.querySelectorAll('input[type="checkbox"]').forEach(cb=>{ cb.disabled = document.getElementById('userIsAdmin').checked; });
+  document.getElementById('userDelete').style.display = u? 'inline-block':'none';
+  userModal.classList.add('show');
+}
+document.getElementById('userSave').addEventListener('click',()=>{
+  const id=document.getElementById('userId').value;
+  const name=document.getElementById('userName').value.trim();
+  const email=document.getElementById('userEmail').value.trim().toLowerCase();
+  if(!name){ toast('Name is required'); return; }
+  if(!email){ toast('Google email is required'); return; }
+  if(DB.appUsers.some(x=>x.id!==id && (x.email||'').toLowerCase()===email)){ toast('A user with this email already exists'); return; }
+  const modules={};
+  document.getElementById('userModuleChecks').querySelectorAll('input[type="checkbox"]').forEach(cb=>{ modules[cb.dataset.mod]=cb.checked; });
+  const obj={
+    id: id||uid(), name, email,
+    isAdmin: document.getElementById('userIsAdmin').checked,
+    modules,
+    created: id? (DB.appUsers.find(x=>x.id===id)||{}).created : new Date().toISOString()
+  };
+  if(id){ DB.appUsers = DB.appUsers.map(x=>x.id===id?obj:x); } else { DB.appUsers.push(obj); }
+  userModal.classList.remove('show'); saveData(); toast('User saved');
+});
+document.getElementById('userDelete').addEventListener('click',()=>{
+  const id=document.getElementById('userId').value;
+  DB.appUsers = DB.appUsers.filter(x=>x.id!==id);
+  userModal.classList.remove('show'); saveData(); toast('User removed');
+});
+function renderUsers(){
+  const rows = DB.appUsers.slice().sort((a,b)=>(a.name||'').localeCompare(b.name||''));
+  document.getElementById('userCountTop').textContent = rows.length;
+  document.getElementById('userEmpty').style.display = rows.length? 'none':'block';
+  const tbody=document.getElementById('userTbody'); tbody.innerHTML='';
+  rows.forEach(u=>{
+    const access = u.isAdmin ? 'Full admin access' : MODULE_LIST.filter(m=>(u.modules||{})[m.key]).map(m=>m.label.split(' (')[0]).join(', ') || 'No modules selected';
+    const tr=document.createElement('tr');
+    tr.innerHTML = `<td>${esc(u.name)}</td><td>${esc(u.email)}</td><td style="font-size:12px; color:var(--muted);">${esc(access)}</td>
+      <td class="rowbtns"><button class="btn small" data-edit="${u.id}">Edit</button></td>`;
+    tbody.appendChild(tr);
+  });
+  tbody.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>{
+    openUserModal(DB.appUsers.find(x=>x.id===b.dataset.edit));
+  }));
+}
 
 /* ---------- FINANCE: EXPENSES ---------- */
 const expenseModal=document.getElementById('expenseModal');
@@ -2055,7 +2739,7 @@ function renderExpenses(){
     const status = x.status||'Submitted';
     const tr=document.createElement('tr');
     tr.innerHTML = `<td class="num">${esc(x.date||'—')}</td><td><span class="badge tech">${esc(x.category)}</span></td>
-      <td>${esc(x.desc)}</td><td style="font-family:var(--mono); font-size:11.5px;">${route}</td>
+      <td>${esc(x.desc)}</td><td style="font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:11.5px;">${route}</td>
       <td>${esc(dealName)}</td><td>${esc(x.person||'—')}</td>
       <td class="num">${inr(x.amount)}</td>
       <td><span class="badge ${statusClass[status]||'new'}">${esc(status)}</span></td>
@@ -2244,6 +2928,39 @@ function populateQuoteContactOptions(selected){
   sel.innerHTML = '<option value="">— select a contact —</option>' +
     DB.contacts.map(c=>`<option value="${c.id}" ${c.id===selected?'selected':''}>${esc(c.company)} — ${esc(c.name)} (${esc(c.department)})</option>`).join('');
 }
+/* ---------- shared: Account-picker used by Quotation (and reusable elsewhere) ---------- */
+let pendingAccountTarget = null; // {selectEl, prefix} — set right before opening the Account modal inline
+function populateAccountOptions(selectEl, selectedId){
+  const opts = DB.accounts.slice().sort((a,b)=>a.company.localeCompare(b.company))
+    .map(a=>`<option value="${a.id}" ${a.id===selectedId?'selected':''}>${esc(a.company)}</option>`).join('');
+  selectEl.innerHTML = '<option value="">— select an account —</option>' + opts + '<option value="__new__">+ Add New Account…</option>';
+}
+function fillCompanyFieldsFromAccount(a, prefix){
+  document.getElementById(prefix+'Company').value = a.company;
+  document.getElementById(prefix+'Gstin').value = a.gstin||'';
+  document.getElementById(prefix+'Address').value = a.address||'';
+  document.getElementById(prefix+'City').value = a.city||'';
+  document.getElementById(prefix+'State').value = a.state||'';
+  document.getElementById(prefix+'Pincode').value = a.pincode||'';
+}
+function onAccountSaved(a){
+  if(!pendingAccountTarget) return;
+  const {selectEl, prefix} = pendingAccountTarget;
+  populateAccountOptions(selectEl, a.id);
+  fillCompanyFieldsFromAccount(a, prefix);
+  pendingAccountTarget = null;
+}
+document.getElementById('quoteAccount').addEventListener('change', e=>{
+  const val = e.target.value;
+  if(val==='__new__'){
+    pendingAccountTarget = { selectEl: document.getElementById('quoteAccount'), prefix:'quote' };
+    e.target.value='';
+    openAccountModal();
+    return;
+  }
+  const a = DB.accounts.find(x=>x.id===val);
+  if(a) fillCompanyFieldsFromAccount(a, 'quote');
+});
 function populateQuoteDealOptions(selected){
   const sel=document.getElementById('quoteDeal');
   sel.innerHTML = '<option value="">— none —</option>' +
@@ -2252,13 +2969,21 @@ function populateQuoteDealOptions(selected){
 document.getElementById('quoteContact').addEventListener('change', e=>{
   const c=DB.contacts.find(x=>x.id===e.target.value);
   if(c){
-    document.getElementById('quoteCompany').value = c.company;
     document.getElementById('quoteContactPerson').value = c.name||'';
-    document.getElementById('quoteGstin').value = c.gstin||'';
-    document.getElementById('quoteAddress').value = c.address||'';
-    document.getElementById('quoteCity').value = c.city||'';
-    document.getElementById('quoteState').value = c.state||'';
-    document.getElementById('quotePincode').value = c.pincode||'';
+    const matched = DB.accounts.find(a=>normCompanyKey(a.company)===normCompanyKey(c.company));
+    if(matched){
+      populateAccountOptions(document.getElementById('quoteAccount'), matched.id);
+      fillCompanyFieldsFromAccount(matched, 'quote');
+    } else {
+      // Contact's company has no matching Account yet — fall back to the contact's own
+      // details so nothing is lost, though saving still requires picking/creating an Account.
+      document.getElementById('quoteCompany').value = c.company;
+      document.getElementById('quoteGstin').value = c.gstin||'';
+      document.getElementById('quoteAddress').value = c.address||'';
+      document.getElementById('quoteCity').value = c.city||'';
+      document.getElementById('quoteState').value = c.state||'';
+      document.getElementById('quotePincode').value = c.pincode||'';
+    }
   }
 });
 const STANDARD_QUOTE_TERMS = `Price: Ex-works Ghaziabad
@@ -2276,6 +3001,8 @@ function openQuoteModal(q){
   document.getElementById('quoteDate').value = q? q.date : new Date().toISOString().slice(0,10);
   document.getElementById('quoteValidity').value = q? q.validity : 15;
   populateQuoteContactOptions(q? q.contactId:'');
+  const matchedAccount = q? DB.accounts.find(a=>normCompanyKey(a.company)===normCompanyKey(q.company)) : null;
+  populateAccountOptions(document.getElementById('quoteAccount'), matchedAccount? matchedAccount.id : '');
   document.getElementById('quoteCompany').value = q? q.company:'';
   document.getElementById('quoteContactPerson').value = q? (q.contactPerson||''):'';
   document.getElementById('quoteGstin').value = q? (q.gstin||''):'';
@@ -2299,7 +3026,7 @@ function openQuoteModal(q){
 document.getElementById('quoteSave').addEventListener('click',()=>{
   const id=document.getElementById('quoteId').value;
   const company=document.getElementById('quoteCompany').value.trim();
-  if(!company){ toast('Company is required'); return; }
+  if(!company){ toast('Please select an Account (or add a new one) before saving'); return; }
   let dealId = document.getElementById('quoteDeal').value;
   const isNewQuote = !id;
   const autoCreateDeal = document.getElementById('quoteAutoCreateDeal').checked;
@@ -2389,6 +3116,7 @@ function renderQuotes(){
       <td class="rowbtns">
         <button class="btn small" data-edit="${x.id}">Edit</button>
         <button class="btn small" data-print="${x.id}">Print</button>
+        <button class="btn small" data-email="${x.id}">Email</button>
         ${canConvert? `<button class="btn small primary" data-convert="${x.id}">${convertLabel}</button>`:''}
       </td>`;
     tbody.appendChild(tr);
@@ -2399,6 +3127,9 @@ function renderQuotes(){
   tbody.querySelectorAll('[data-print]').forEach(b=>b.addEventListener('click',()=>{
     openPrintOptions('quote', b.dataset.print);
   }));
+  tbody.querySelectorAll('[data-email]').forEach(b=>b.addEventListener('click',()=>{
+    emailDocument('quote', b.dataset.email);
+  }));
   tbody.querySelectorAll('[data-convert]').forEach(b=>b.addEventListener('click',()=>{
     convertQuoteToProforma(b.dataset.convert);
   }));
@@ -2406,6 +3137,13 @@ function renderQuotes(){
 }
 document.getElementById('quoteSearch').addEventListener('input',()=>{ paginationState.quote=1; render(); });
 document.getElementById('quoteStatusFilter').addEventListener('change',()=>{ paginationState.quote=1; render(); });
+document.getElementById('exportQuotesBtn').addEventListener('click',()=>{
+  exportToXlsx('Quotations', ['Quote #','Date','Company','Basic Value','Tax %','Grand Total','Status'],
+    DB.quotes.map(q=>{
+      const {subtotal, grand} = recalcTotalsStatic(q.items, q.taxPct);
+      return [q.number||'', q.date||'', q.company||'', subtotal, q.taxPct||0, grand, q.status||''];
+    }));
+});
 function recalcTotalsStatic(items, taxPct){
   const subtotal = itemsSubtotal(items);
   const tax = subtotal*(taxPct||0)/100;
@@ -2423,53 +3161,38 @@ document.getElementById('poAddItemBtn').addEventListener('click',()=>{
 });
 document.getElementById('poTaxPct').addEventListener('input',()=>recalcTotals('poTaxPct','poTotals'));
 function nextPoNumber(){ return 'PO-' + String(DB.purchaseOrders.length+1).padStart(4,'0'); }
-function populateVendorSuggestions(){
-  const dl=document.getElementById('vendorSuggestions');
-  const vendors=[...new Set([
-    ...DB.supply.flatMap(s=>(s.priceList||[]).map(p=>p.vendor)),
-    ...DB.purchaseOrders.map(po=>po.vendor)
-  ].filter(Boolean))];
-  dl.innerHTML = vendors.map(v=>`<option value="${esc(v)}">`).join('');
+function populateVendorSelectOptions(selectedId){
+  const sel=document.getElementById('poVendorSelect');
+  const opts = DB.vendors.slice().sort((a,b)=>a.name.localeCompare(b.name))
+    .map(v=>`<option value="${v.id}" ${v.id===selectedId?'selected':''}>${esc(v.name)}</option>`).join('');
+  sel.innerHTML = '<option value="">— select a vendor —</option>' + opts + '<option value="__new__">+ Add New Vendor…</option>';
 }
-function getVendorDirectory(){
-  // Builds a vendor -> {gstin, contact, phone, address} lookup from past Purchase Orders,
-  // keeping the most recent (by date) non-empty details entered for each vendor name.
-  const dir = {};
-  DB.purchaseOrders
-    .slice()
-    .sort((a,b)=> (a.date||'').localeCompare(b.date||''))
-    .forEach(po=>{
-      if(!po.vendor) return;
-      const key = po.vendor.trim().toLowerCase();
-      if(!key) return;
-      const existing = dir[key] || {};
-      dir[key] = {
-        gstin: po.vendorGstin || existing.gstin || '',
-        contact: po.vendorContact || existing.contact || '',
-        phone: po.vendorPhone || existing.phone || '',
-        address: po.vendorAddress || existing.address || ''
-      };
-    });
-  return dir;
+function fillVendorFieldsFromVendor(v){
+  document.getElementById('poVendor').value = v.name;
+  document.getElementById('poVendorGstin').value = v.gstin||'';
+  document.getElementById('poVendorContact').value = v.contact||'';
+  document.getElementById('poVendorPhone').value = v.phone||'';
+  document.getElementById('poVendorEmail').value = v.email||'';
+  document.getElementById('poVendorAddress').value = v.address||'';
 }
-function autofillVendorFields(){
-  const name = document.getElementById('poVendor').value.trim().toLowerCase();
-  if(!name) return;
-  const dir = getVendorDirectory();
-  const match = dir[name];
-  if(!match) return;
-  if(match.gstin) document.getElementById('poVendorGstin').value = match.gstin;
-  if(match.contact) document.getElementById('poVendorContact').value = match.contact;
-  if(match.phone) document.getElementById('poVendorPhone').value = match.phone;
-  if(match.address) document.getElementById('poVendorAddress').value = match.address;
-}
-document.getElementById('poVendor').addEventListener('change', autofillVendorFields);
-document.getElementById('poVendor').addEventListener('input', ()=>{
-  // datalist selection fires 'input' with an exact matching value — autofill only on exact match
-  const name = document.getElementById('poVendor').value.trim().toLowerCase();
-  const dir = getVendorDirectory();
-  if(dir[name]) autofillVendorFields();
+document.getElementById('poVendorSelect').addEventListener('change', e=>{
+  const val = e.target.value;
+  if(val==='__new__'){
+    pendingVendorTarget = document.getElementById('poVendorSelect');
+    e.target.value='';
+    openVendorModal();
+    return;
+  }
+  const v = DB.vendors.find(x=>x.id===val);
+  if(v) fillVendorFieldsFromVendor(v);
 });
+let pendingVendorTarget = null; // the <select> to re-populate + select after an inline "Add New Vendor"
+function onVendorSaved(v){
+  if(!pendingVendorTarget) return;
+  populateVendorSelectOptions(v.id);
+  fillVendorFieldsFromVendor(v);
+  pendingVendorTarget = null;
+}
 function populatePoLinkOptions(selectedDealId, selectedQuoteId){
   const dealSel=document.getElementById('poLinkedDeal');
   dealSel.innerHTML = '<option value="">— none —</option>' +
@@ -2487,11 +3210,13 @@ function openPoModal(po){
   document.getElementById('poNumber').value = po? po.number : nextPoNumber();
   document.getElementById('poDate').value = po? po.date : new Date().toISOString().slice(0,10);
   document.getElementById('poStatus').value = po? po.status:'Draft';
-  populateVendorSuggestions();
+  const matchedVendor = po? DB.vendors.find(v=>normCompanyKey(v.name)===normCompanyKey(po.vendor)) : null;
+  populateVendorSelectOptions(matchedVendor? matchedVendor.id : '');
   document.getElementById('poVendor').value = po? po.vendor:'';
   document.getElementById('poVendorGstin').value = po? (po.vendorGstin||''):'';
   document.getElementById('poVendorContact').value = po? (po.vendorContact||''):'';
   document.getElementById('poVendorPhone').value = po? (po.vendorPhone||''):'';
+  document.getElementById('poVendorEmail').value = po? (po.vendorEmail||''):'';
   document.getElementById('poVendorAddress').value = po? (po.vendorAddress||''):'';
   const cp = DB.companyProfile||{};
   document.getElementById('poBillAddress').value = po? (po.billAddress||'') : (cp.address||'');
@@ -2518,7 +3243,7 @@ function openPoModal(po){
 document.getElementById('poSave').addEventListener('click',()=>{
   const id=document.getElementById('poId').value;
   const vendor=document.getElementById('poVendor').value.trim();
-  if(!vendor){ toast('Vendor name is required'); return; }
+  if(!vendor){ toast('Please select a Vendor (or add a new one) before saving'); return; }
   const obj={
     id:id||uid(), number:document.getElementById('poNumber').value.trim(),
     date:document.getElementById('poDate').value,
@@ -2526,6 +3251,7 @@ document.getElementById('poSave').addEventListener('click',()=>{
     vendor, vendorGstin:document.getElementById('poVendorGstin').value.trim(),
     vendorContact:document.getElementById('poVendorContact').value.trim(),
     vendorPhone:document.getElementById('poVendorPhone').value.trim(),
+    vendorEmail:document.getElementById('poVendorEmail').value.trim(),
     vendorAddress:document.getElementById('poVendorAddress').value.trim(),
     billAddress:document.getElementById('poBillAddress').value.trim(),
     billCity:document.getElementById('poBillCity').value.trim(),
@@ -2575,6 +3301,7 @@ function renderPurchaseOrders(){
       <td class="rowbtns">
         <button class="btn small" data-edit="${x.id}">Edit</button>
         <button class="btn small" data-print="${x.id}">Print</button>
+        <button class="btn small" data-email="${x.id}">Email</button>
       </td>`;
     tbody.appendChild(tr);
   });
@@ -2583,6 +3310,9 @@ function renderPurchaseOrders(){
   }));
   tbody.querySelectorAll('[data-print]').forEach(b=>b.addEventListener('click',()=>{
     openPrintOptions('po', b.dataset.print);
+  }));
+  tbody.querySelectorAll('[data-email]').forEach(b=>b.addEventListener('click',()=>{
+    emailPurchaseOrder(b.dataset.email);
   }));
   renderPaginationControls('poPagination', 'po', pageInfo, renderPurchaseOrders);
 }
@@ -2725,6 +3455,7 @@ function renderProformas(){
       <td class="rowbtns">
         <button class="btn small" data-edit="${x.id}">Edit</button>
         <button class="btn small" data-print="${x.id}">Print</button>
+        <button class="btn small" data-email="${x.id}">Email</button>
         ${canConvert? `<button class="btn small primary" data-convert="${x.id}">${convertLabel}</button>`:''}
       </td>`;
     tbody.appendChild(tr);
@@ -2734,6 +3465,9 @@ function renderProformas(){
   }));
   tbody.querySelectorAll('[data-print]').forEach(b=>b.addEventListener('click',()=>{
     openPrintOptions('proforma', b.dataset.print);
+  }));
+  tbody.querySelectorAll('[data-email]').forEach(b=>b.addEventListener('click',()=>{
+    emailDocument('proforma', b.dataset.email);
   }));
   tbody.querySelectorAll('[data-convert]').forEach(b=>b.addEventListener('click',()=>{
     convertProformaToTaxInvoice(b.dataset.convert);
@@ -2858,10 +3592,10 @@ function renderTaxInvoices(){
     const tr=document.createElement('tr');
     tr.innerHTML = `<td class="num">${esc(x.number)}</td><td class="num">${esc(srcPf?srcPf.number:'—')}</td>
       <td>${esc(x.company)}</td><td class="num">${esc(x.date||'—')}</td><td class="num">${esc(x.due||'—')}</td>
-      <td style="font-family:var(--mono); font-size:11px;">${gstText}</td>
+      <td style="font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:11px;">${gstText}</td>
       <td class="num">${inr(grand)}</td>
       <td><span class="badge ${statusClass}">${effectiveOverdue?'Overdue':esc(x.status)}</span></td>
-      <td class="rowbtns"><button class="btn small" data-edit="${x.id}">Edit</button> <button class="btn small" data-print="${x.id}">Print</button></td>`;
+      <td class="rowbtns"><button class="btn small" data-edit="${x.id}">Edit</button> <button class="btn small" data-print="${x.id}">Print</button> <button class="btn small" data-email="${x.id}">Email</button></td>`;
     tbody.appendChild(tr);
   });
   tbody.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>{
@@ -2869,6 +3603,9 @@ function renderTaxInvoices(){
   }));
   tbody.querySelectorAll('[data-print]').forEach(b=>b.addEventListener('click',()=>{
     openPrintOptions('taxinvoice', b.dataset.print);
+  }));
+  tbody.querySelectorAll('[data-email]').forEach(b=>b.addEventListener('click',()=>{
+    emailDocument('taxinvoice', b.dataset.email);
   }));
   renderPaginationControls('taxInvPagination', 'taxinv', pageInfo, renderTaxInvoices);
 }
@@ -3002,12 +3739,80 @@ function renderAnalytics(){
     tbody.appendChild(tr);
   });
 
+  renderPieCharts();
+
   const chartEl=document.getElementById('analyticsChart');
   if(rows.length===0){
     chartEl.innerHTML = '<div class="empty">No monthly data yet.</div>';
     return;
   }
   chartEl.innerHTML = buildLineChartSvg(rows);
+}
+
+/* ---------- ANALYTICS: PIE CHARTS ("Areas of Improvement") ---------- */
+const PIE_PALETTE = ['#5B2C8C','#1C9384','#A9720F','#C6433F','#2F6FED','#2E8B57','#B5651D','#7D3C98','#117864','#943126','#1F618D','#6E2C00'];
+function polarToCartesian(cx, cy, r, angleDeg){
+  const rad = (angleDeg-90) * Math.PI/180;
+  return { x: cx + r*Math.cos(rad), y: cy + r*Math.sin(rad) };
+}
+function pieSlicePath(cx, cy, r, startAngle, endAngle){
+  const start = polarToCartesian(cx, cy, r, endAngle);
+  const end = polarToCartesian(cx, cy, r, startAngle);
+  const largeArc = (endAngle - startAngle) <= 180 ? 0 : 1;
+  return `M ${cx} ${cy} L ${start.x.toFixed(2)} ${start.y.toFixed(2)} A ${r} ${r} 0 ${largeArc} 0 ${end.x.toFixed(2)} ${end.y.toFixed(2)} Z`;
+}
+function buildPieChartSvg(title, data){
+  const items = data.filter(d=>d.value>0);
+  const total = items.reduce((s,d)=>s+d.value,0);
+  if(!items.length || total<=0){
+    return `<div class="panel" style="margin:0;"><div style="font-family:var(--disp); font-weight:700; font-size:13px; color:var(--text); margin-bottom:10px;">${esc(title)}</div><div class="empty" style="padding:20px 0;">No data yet.</div></div>`;
+  }
+  const r=70, cx=80, cy=80;
+  let angle=0;
+  const slices = items.map((d,i)=>{
+    const pct = d.value/total*360;
+    const path = pct>=359.99
+      ? `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${PIE_PALETTE[i%PIE_PALETTE.length]}"/>`
+      : `<path d="${pieSlicePath(cx,cy,r,angle,angle+pct)}" fill="${PIE_PALETTE[i%PIE_PALETTE.length]}"/>`;
+    angle += pct;
+    return path;
+  }).join('');
+  const legend = items.map((d,i)=>{
+    const pct = Math.round(d.value/total*1000)/10;
+    return `<div style="display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--text); margin-bottom:3px;">
+      <span style="width:9px; height:9px; border-radius:2px; background:${PIE_PALETTE[i%PIE_PALETTE.length]}; flex:none;"></span>
+      <span style="flex:1;">${esc(d.label)}</span><span style="color:var(--muted);">${pct}%</span></div>`;
+  }).join('');
+  return `<div class="panel" style="margin:0;">
+    <div style="font-family:var(--disp); font-weight:700; font-size:13px; color:var(--text); margin-bottom:10px;">${esc(title)}</div>
+    <div style="display:flex; gap:16px; align-items:flex-start; flex-wrap:wrap;">
+      <svg width="160" height="160" viewBox="0 0 160 160">${slices}</svg>
+      <div style="flex:1; min-width:120px;">${legend}</div>
+    </div>
+  </div>`;
+}
+function renderPieCharts(){
+  const fyEl = document.getElementById('pieChartsFyLabel');
+  if(fyEl) fyEl.textContent = fyLabel(selectedFYStartYear);
+  const toData = obj => Object.keys(obj).map(k=>({label:k, value:obj[k]})).sort((a,b)=>b.value-a.value);
+
+  const openDealsForChart = DB.deals.filter(d=>d.stage!=='Lost' && d.stage!=='PO Received');
+  const dealsByIndustry = {};
+  openDealsForChart.forEach(d=>{ const k=d.industry||'Other'; dealsByIndustry[k]=(dealsByIndustry[k]||0)+(d.value||0); });
+
+  const expByCat = {};
+  DB.expenses.filter(x=>inSelectedFY(x.date)).forEach(x=>{ const k=x.category||'Other'; expByCat[k]=(expByCat[k]||0)+(x.amount||0); });
+
+  const wonInFYForChart = DB.deals.filter(d=>d.stage==='PO Received' && inSelectedFY(d.close||d.created));
+  const bookingByIndustry = {};
+  wonInFYForChart.forEach(d=>{ const k=d.industry||'Other'; bookingByIndustry[k]=(bookingByIndustry[k]||0)+(d.value||0); });
+
+  const row = document.getElementById('pieChartsRow');
+  if(!row) return;
+  row.innerHTML =
+    buildPieChartSvg('Deals by Industry (Open Pipeline, Basic Value)', toData(dealsByIndustry)) +
+    buildPieChartSvg('Expense by Category (FY '+fyLabel(selectedFYStartYear)+')', toData(expByCat)) +
+    buildPieChartSvg('Order Booking by Industry (FY '+fyLabel(selectedFYStartYear)+')', toData(bookingByIndustry));
 }
 
 function buildLineChartSvg(rows){
@@ -3627,14 +4432,18 @@ function render(){
   renderPipeline();
   renderSupply();
   renderPurchaseOrders();
+  renderVendors();
   renderContacts();
+  renderAccounts();
   renderQuotesModule();
   renderFinance();
   renderTasks();
   renderAnalytics();
   renderBankDetails();
+  renderUsers();
 }
 render();
+applyAccessControl();
 
 /* ---------- PWA: SERVICE WORKER REGISTRATION ---------- */
 if ('serviceWorker' in navigator) {
