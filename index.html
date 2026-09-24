@@ -1835,6 +1835,27 @@ function sanitizeForCloud(db){
   });
   return clone;
 }
+// Turns a failed fetch/response into a specific, actionable status message
+// instead of a generic "unreachable" — the two most common causes are (a)
+// the Web App URL pasted in is the CRM page link (the domain-restricted
+// deployment) rather than the .../exec JSON API link, or (b) that API
+// deployment's "Who has access" isn't set to Anyone, so Google serves back
+// an HTML sign-in page instead of JSON.
+async function parseCloudResponse(res){
+  const text = await res.text();
+  let json;
+  try{ json = JSON.parse(text); }
+  catch(e){
+    const looksLikeHtml = /^\s*</.test(text);
+    throw new Error(looksLikeHtml
+      ? 'Cloud sent back a web page instead of data — check that the Web App URL is the API deployment\'s .../exec link (not the CRM page link), and that deployment\'s access is set to "Anyone"'
+      : 'Cloud sent back an unexpected response (not JSON)');
+  }
+  if(!res.ok && !json.error){
+    throw new Error('Cloud returned an error (HTTP '+res.status+')');
+  }
+  return json;
+}
 async function pushToCloud(){
   if(!CLOUD.url) return;
   try{
@@ -1843,11 +1864,14 @@ async function pushToCloud(){
       headers:{'Content-Type':'text/plain;charset=utf-8'},
       body: JSON.stringify({ token: CLOUD.token, data: sanitizeForCloud(DB) })
     });
-    const json = await res.json();
+    const json = await parseCloudResponse(res);
     if(json.error){ setSyncStatus('Cloud error: '+json.error, false); return; }
     setSyncStatus('Synced to cloud '+new Date().toLocaleTimeString(), true);
   }catch(e){
-    setSyncStatus('Push failed — check the Web App URL / connection', false);
+    const msg = (e instanceof TypeError)
+      ? 'Push failed — check the Web App URL is correct and your internet connection'
+      : (e.message || 'Push failed — check the Web App URL / connection');
+    setSyncStatus(msg, false);
   }
 }
 
@@ -1855,7 +1879,7 @@ async function pullFromCloud(silent){
   if(!CLOUD.url) return;
   try{
     const res = await fetch(CLOUD.url+'?token='+encodeURIComponent(CLOUD.token));
-    const json = await res.json();
+    const json = await parseCloudResponse(res);
     if(json.error){ setSyncStatus('Cloud error: '+json.error, false); return; }
     // Local-only receipt attachments (not yet on Drive) are never sent to
     // the cloud, so they won't come back in json — carry them forward
@@ -1879,7 +1903,10 @@ async function pullFromCloud(silent){
     render();
     setSyncStatus('Synced '+new Date().toLocaleTimeString(), true);
   }catch(e){
-    setSyncStatus('Cloud unreachable — showing last local copy', false);
+    const msg = (e instanceof TypeError)
+      ? 'Cloud unreachable — check the Web App URL is correct and your internet connection'
+      : (e.message || 'Cloud unreachable');
+    setSyncStatus(msg + ' — showing last local copy', false);
   }
 }
 
