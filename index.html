@@ -413,13 +413,24 @@
       </div>
       <div class="board" id="board"></div>
       <div class="panel" id="pipelineListWrap" style="display:none;">
+        <div class="toolbar" style="margin-bottom:12px;">
+          <select id="pipelineFilterColumn">
+            <option value="">Filter by...</option>
+            <option value="company">Company</option>
+            <option value="product">Product</option>
+            <option value="stage">Stage</option>
+            <option value="industry">Industry</option>
+          </select>
+          <select id="pipelineFilterValue" disabled><option value="">All</option></select>
+          <button class="btn small" id="pipelineFilterClearBtn" type="button">Clear Filter</button>
+        </div>
         <table>
           <thead><tr>
-            <th><span class="th-sort" data-table="pipeline" data-field="company">Company<span class="sort-ic"> ⇅</span></span> <select id="pipelineCompanyFilter" style="font-size:11px; font-weight:400; text-transform:none; margin-left:4px;"><option value="">All</option></select></th>
-            <th><span class="th-sort" data-table="pipeline" data-field="product">Product<span class="sort-ic"> ⇅</span></span> <select id="pipelineProductFilter" style="font-size:11px; font-weight:400; text-transform:none; margin-left:4px;"><option value="">All</option></select></th>
+            <th><span class="th-sort" data-table="pipeline" data-field="company">Company<span class="sort-ic"> ⇅</span></span></th>
+            <th><span class="th-sort" data-table="pipeline" data-field="product">Product<span class="sort-ic"> ⇅</span></span></th>
             <th><span class="th-sort" data-table="pipeline" data-field="notes">Notes<span class="sort-ic"> ⇅</span></span></th>
-            <th><span class="th-sort" data-table="pipeline" data-field="stage">Stage<span class="sort-ic"> ⇅</span></span> <select id="pipelineStageFilter" style="font-size:11px; font-weight:400; text-transform:none; margin-left:4px;"><option value="">All</option></select></th>
-            <th><span class="th-sort" data-table="pipeline" data-field="industry">Industry<span class="sort-ic"> ⇅</span></span> <select id="pipelineIndustryFilter" style="font-size:11px; font-weight:400; text-transform:none; margin-left:4px;"><option value="">All</option></select></th>
+            <th><span class="th-sort" data-table="pipeline" data-field="stage">Stage<span class="sort-ic"> ⇅</span></span></th>
+            <th><span class="th-sort" data-table="pipeline" data-field="industry">Industry<span class="sort-ic"> ⇅</span></span></th>
             <th><span class="th-sort" data-table="pipeline" data-field="value">Value<span class="sort-ic"> ⇅</span></span></th>
             <th><span class="th-sort" data-table="pipeline" data-field="close">Close Date<span class="sort-ic"> ⇅</span></span></th>
             <th><span class="th-sort" data-table="pipeline" data-field="created">Added<span class="sort-ic"> ⇅</span></span></th>
@@ -1806,10 +1817,20 @@ if(APP_RESTRICTED && typeof window.__UNICO_CLOUD_URL__ !== 'undefined' && window
   }
 }
 
+const PENDING_PUSH_KEY = 'unico_pending_push_v1';
 function saveData(){
   localStorage.setItem(STORE_KEY, JSON.stringify(DB));
   render();
-  if(CLOUD.url) pushToCloud();
+  if(CLOUD.url){
+    // Mark that this local change hasn't been confirmed on the cloud yet.
+    // This flag is persisted (not just in-memory) so that if the page is
+    // refreshed/closed before the push finishes, the NEXT load knows to
+    // push this device's local copy to the cloud BEFORE pulling — otherwise
+    // an auto-pull-on-load could silently overwrite the just-made change
+    // with the older cloud copy.
+    try{ localStorage.setItem(PENDING_PUSH_KEY, '1'); }catch(e){}
+    return pushToCloud();
+  }
 }
 
 function setSyncStatus(msg, ok){
@@ -1856,8 +1877,10 @@ async function parseCloudResponse(res){
   }
   return json;
 }
+let cloudPushInFlight = false;
 async function pushToCloud(){
   if(!CLOUD.url) return;
+  cloudPushInFlight = true;
   try{
     const res = await fetch(CLOUD.url, {
       method:'POST',
@@ -1866,17 +1889,26 @@ async function pushToCloud(){
     });
     const json = await parseCloudResponse(res);
     if(json.error){ setSyncStatus('Cloud error: '+json.error, false); return; }
+    try{ localStorage.removeItem(PENDING_PUSH_KEY); }catch(e){}
     setSyncStatus('Synced to cloud '+new Date().toLocaleTimeString(), true);
   }catch(e){
     const msg = (e instanceof TypeError)
       ? 'Push failed — check the Web App URL is correct and your internet connection'
       : (e.message || 'Push failed — check the Web App URL / connection');
     setSyncStatus(msg, false);
+  }finally{
+    cloudPushInFlight = false;
   }
 }
 
 async function pullFromCloud(silent){
   if(!CLOUD.url) return;
+  if(cloudPushInFlight){
+    // A local change is still being written to the cloud — pulling right
+    // now could overwrite it with the pre-change copy. Skip this pull; the
+    // next poll cycle (or the pending-push flush on next load) will catch up.
+    return;
+  }
   try{
     const res = await fetch(CLOUD.url+'?token='+encodeURIComponent(CLOUD.token));
     const json = await parseCloudResponse(res);
@@ -1940,7 +1972,18 @@ document.getElementById('cloudDisconnectBtn').addEventListener('click', ()=>{
   setSyncStatus('Not connected — data is local to this browser only.');
   toast('Disconnected from cloud');
 });
-if(CLOUD.url){ setSyncStatus('Loading from cloud...'); pullFromCloud().then(startCloudPolling); }
+if(CLOUD.url){
+  setSyncStatus('Loading from cloud...');
+  let pendingPush = false;
+  try{ pendingPush = localStorage.getItem(PENDING_PUSH_KEY)==='1'; }catch(e){}
+  const startup = pendingPush
+    // A change from before the last refresh/close never got confirmed on the
+    // cloud — push this device's local copy up FIRST so it isn't lost, then
+    // pull (which will simply confirm it back).
+    ? pushToCloud().then(()=>pullFromCloud())
+    : pullFromCloud();
+  startup.then(startCloudPolling);
+}
 
 function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
 function toast(msg){
@@ -2490,30 +2533,36 @@ function renderPipelineBoard(){
     });
   });
 }
+const PIPELINE_FILTER_LABELS = { company:'Company', product:'Product', stage:'Stage', industry:'Industry' };
+function pipelineFilterValues(col){
+  if(!col) return [];
+  if(col==='stage') return STAGES.slice();
+  return [...new Set(DB.deals.map(d=>d[col]).filter(Boolean))].sort();
+}
+function renderPipelineFilterValueOptions(){
+  const colSel = document.getElementById('pipelineFilterColumn');
+  const valSel = document.getElementById('pipelineFilterValue');
+  const col = colSel.value;
+  const curVal = valSel.value;
+  if(!col){
+    valSel.innerHTML = '<option value="">All</option>';
+    valSel.value = '';
+    valSel.disabled = true;
+    return;
+  }
+  const values = pipelineFilterValues(col);
+  const label = PIPELINE_FILTER_LABELS[col] || 'Value';
+  valSel.innerHTML = `<option value="">All ${esc(label)}s</option>` + values.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
+  valSel.value = values.includes(curVal) ? curVal : '';
+  valSel.disabled = false;
+}
 function renderPipelineList(){
-  const companySel = document.getElementById('pipelineCompanyFilter');
-  const productSel = document.getElementById('pipelineProductFilter');
-  const stageSel = document.getElementById('pipelineStageFilter');
-  const industrySel = document.getElementById('pipelineIndustryFilter');
-  const curCompany = companySel.value, curProduct = productSel.value, curStage = stageSel.value, curIndustry = industrySel.value;
-  const companies = [...new Set(DB.deals.map(d=>d.company).filter(Boolean))].sort();
-  companySel.innerHTML = '<option value="">All Companies</option>' + companies.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');
-  companySel.value = companies.includes(curCompany) ? curCompany : '';
-  const products = [...new Set(DB.deals.map(d=>d.product).filter(Boolean))].sort();
-  productSel.innerHTML = '<option value="">All Products</option>' + products.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join('');
-  productSel.value = products.includes(curProduct) ? curProduct : '';
-  stageSel.innerHTML = '<option value="">All Stages</option>' + STAGES.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join('');
-  stageSel.value = STAGES.includes(curStage) ? curStage : '';
-  const industries = [...new Set(DB.deals.map(d=>d.industry).filter(Boolean))].sort();
-  industrySel.innerHTML = '<option value="">All Industries</option>' + industries.map(i=>`<option value="${esc(i)}">${esc(i)}</option>`).join('');
-  industrySel.value = industries.includes(curIndustry) ? curIndustry : '';
+  renderPipelineFilterValueOptions();
+  const col = document.getElementById('pipelineFilterColumn').value;
+  const val = document.getElementById('pipelineFilterValue').value;
 
-  let rows = DB.deals.filter(d=>
-    (!companySel.value || d.company===companySel.value) &&
-    (!productSel.value || d.product===productSel.value) &&
-    (!stageSel.value || d.stage===stageSel.value) &&
-    (!industrySel.value || d.industry===industrySel.value)
-  ).sort((a,b)=>(b.created||'').localeCompare(a.created||''));
+  let rows = DB.deals.filter(d=> !col || !val || d[col]===val)
+    .sort((a,b)=>(b.created||'').localeCompare(a.created||''));
   rows = applySort('pipeline', rows);
 
   const tbody = document.getElementById('pipelineListTbody'); tbody.innerHTML='';
@@ -2535,10 +2584,13 @@ function renderPipelineList(){
 SORT_RENDER_FNS.pipeline = renderPipelineList;
 document.getElementById('pipelineViewBoardBtn').addEventListener('click',()=>{ pipelineViewMode='board'; renderPipeline(); });
 document.getElementById('pipelineViewListBtn').addEventListener('click',()=>{ pipelineViewMode='list'; renderPipeline(); });
-document.getElementById('pipelineCompanyFilter').addEventListener('change', renderPipelineList);
-document.getElementById('pipelineProductFilter').addEventListener('change', renderPipelineList);
-document.getElementById('pipelineStageFilter').addEventListener('change', renderPipelineList);
-document.getElementById('pipelineIndustryFilter').addEventListener('change', renderPipelineList);
+document.getElementById('pipelineFilterColumn').addEventListener('change', renderPipelineList);
+document.getElementById('pipelineFilterValue').addEventListener('change', renderPipelineList);
+document.getElementById('pipelineFilterClearBtn').addEventListener('click', ()=>{
+  document.getElementById('pipelineFilterColumn').value='';
+  document.getElementById('pipelineFilterValue').value='';
+  renderPipelineList();
+});
 
 /* ---------- SUPPLY ---------- */
 const supplyModal=document.getElementById('supplyModal');
