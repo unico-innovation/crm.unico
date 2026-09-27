@@ -261,7 +261,28 @@
   /* MOBILE NAV: hamburger toggle + slide-in drawer */
   .mobile-nav-toggle{display:none;}
   .mobile-nav-backdrop{display:none;}
+  /* MOBILE QUICK-ADD: floating action button for fast Lead/Expense capture on site visits */
+  .quick-add-fab{display:none;}
+  .quick-add-menu{display:none;}
   @media (max-width:760px){
+    .quick-add-fab{
+      display:flex; align-items:center; justify-content:center;
+      position:fixed; bottom:20px; right:16px; z-index:70;
+      width:56px; height:56px; border-radius:50%; background:var(--purple); color:#fff; border:none;
+      font-size:26px; box-shadow:0 4px 14px rgba(0,0,0,0.28); cursor:pointer;
+    }
+    .quick-add-menu{
+      display:none; position:fixed; bottom:84px; right:16px; z-index:70;
+      background:#fff; border:1px solid var(--border); border-radius:10px; box-shadow:0 4px 18px rgba(0,0,0,0.22);
+      overflow:hidden; min-width:190px;
+    }
+    .quick-add-menu.show{display:block;}
+    .quick-add-menu button{
+      display:block; width:100%; text-align:left; padding:13px 16px; border:none; background:#fff;
+      font-family:var(--body); font-size:14px; color:var(--text); cursor:pointer; border-bottom:1px solid var(--border);
+    }
+    .quick-add-menu button:last-child{border-bottom:none;}
+    .quick-add-menu button:active{background:var(--panel-2);}
     .app{flex-direction:column;}
     .mobile-nav-toggle{
       display:flex; align-items:center; justify-content:center;
@@ -304,6 +325,11 @@
 <body>
 <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Open menu">☰</button>
 <div class="mobile-nav-backdrop" id="mobileNavBackdrop"></div>
+<button class="quick-add-fab" id="quickAddFab" aria-label="Quick add">+</button>
+<div class="quick-add-menu" id="quickAddMenu">
+  <button type="button" id="quickAddLeadBtn">📋 Quick Add Lead</button>
+  <button type="button" id="quickAddExpenseBtn">🧾 Quick Add Expense</button>
+</div>
 <div class="app">
 
   <div class="sidebar">
@@ -347,6 +373,11 @@
         </div>
       </div>
       <div class="gauge-row" id="gaugeRow"></div>
+
+      <div class="panel" id="followUpsPanel">
+        <div class="panel-title"><span>Follow-ups &amp; Overdue</span></div>
+        <div id="followUpsList"></div>
+      </div>
 
       <div class="panel">
         <div class="panel-title"><span>Profit &amp; Loss <span id="plFyLabel" style="color:var(--muted); font-weight:400;"></span> (Basic value, Paid tax invoices)</span></div>
@@ -509,6 +540,16 @@
 
       <!-- VENDORS SUBTAB -->
       <div class="stab" id="stab-vendors" style="display:none;">
+        <div class="panel">
+          <div class="panel-title"><span>Vendor Performance</span></div>
+          <table>
+            <thead><tr>
+              <th>Vendor</th><th>Total POs</th><th>Received</th><th>Completion %</th><th>Avg. Lead Time</th><th>Total Value</th>
+            </tr></thead>
+            <tbody id="vendorScoreTbody"></tbody>
+          </table>
+          <div class="empty" id="vendorScoreEmpty" style="display:none;">No purchase orders placed yet — scorecards populate once POs are raised.</div>
+        </div>
         <div class="panel">
           <div class="toolbar">
             <input class="search" id="vendorSearch" placeholder="Search vendor, city...">
@@ -801,6 +842,10 @@
         <div id="customChart"></div>
       </div>
       <div class="panel">
+        <div class="panel-title"><span>Quotation Funnel &amp; Follow-up Health</span></div>
+        <div class="gauge-row" id="quoteFunnelRow"></div>
+      </div>
+      <div class="panel">
         <div class="panel-title"><span>Areas of Improvement — FY <span id="pieChartsFyLabel" style="color:var(--muted); font-weight:400;"></span></span></div>
         <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:18px;" id="pieChartsRow"></div>
       </div>
@@ -997,6 +1042,16 @@
           <tbody id="userTbody"></tbody>
         </table>
         <div class="empty" id="userEmpty" style="display:none;">No restricted users yet — add one to give a teammate limited access.</div>
+      </div>
+
+      <div class="panel" id="activityLogPanel">
+        <div class="panel-title"><span>Recent Activity</span></div>
+        <p style="color:var(--muted); font-size:12.5px; margin-top:0;">Who added, edited or deleted key records — the last 500 actions across this CRM.</p>
+        <table>
+          <thead><tr><th>When</th><th>User</th><th>Action</th><th>Record</th><th>Detail</th></tr></thead>
+          <tbody id="activityLogTbody"></tbody>
+        </table>
+        <div class="empty" id="activityLogEmpty" style="display:none;">No activity logged yet.</div>
       </div>
     </div>
 
@@ -1235,6 +1290,19 @@
     <h2 id="accountDetailTitle">Account</h2>
     <div id="accountDetailAddress" style="font-family:var(--body); font-size:13px; color:var(--text); margin-bottom:14px; background:var(--panel-2); border:1px solid var(--border); border-radius:6px; padding:10px 12px;"></div>
     <div id="accountDetailSections"></div>
+
+    <div style="background:var(--panel-2); border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:14px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+        <div style="font-family:var(--head); font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:.03em; color:var(--muted);">Received POs (from customer)</div>
+        <label class="btn small primary" style="margin:0; cursor:pointer;">+ Upload PO
+          <input type="file" id="accountPoFile" accept="image/*,application/pdf" style="display:none;">
+        </label>
+      </div>
+      <div id="accountPoUploadStatus" style="font-size:12px; color:var(--muted); display:none; margin-bottom:8px;"></div>
+      <div id="accountPoList"></div>
+      <div class="empty" id="accountPoEmpty" style="padding:8px 0; display:none;">No customer PO uploaded yet.</div>
+    </div>
+
     <div class="modal-actions">
       <button class="btn ghost" id="accountDetailClose">Close</button>
       <button class="btn primary" id="accountDetailEdit">Edit Account</button>
@@ -1635,13 +1703,14 @@ function loadData(){
       if(!d.accounts) d.accounts=[];
       if(!d.vendors) d.vendors=[];
       if(!d.appUsers) d.appUsers=[];
+      if(!d.activityLog) d.activityLog=[];
       if(!d.settings) d.settings=defaultSettings();
       d.settings = migrateSettings(d.settings);
       seedAccountsAndVendors(d);
       return d;
     }
   }catch(e){}
-  const fresh = { leads: [], deals: [], supply: [], expenses: [], contacts: [], quotes: [], proformas: [], taxinvoices: [], bankDetails: {}, companyProfile: {}, purchaseOrders: [], tasks: [], accounts: [], vendors: [], appUsers: [], settings: defaultSettings() };
+  const fresh = { leads: [], deals: [], supply: [], expenses: [], contacts: [], quotes: [], proformas: [], taxinvoices: [], bankDetails: {}, companyProfile: {}, purchaseOrders: [], tasks: [], accounts: [], vendors: [], appUsers: [], activityLog: [], settings: defaultSettings() };
   seedAccountsAndVendors(fresh);
   return fresh;
 }
@@ -1778,6 +1847,19 @@ const APP_USER_EMAIL = (typeof window.__UNICO_USER_EMAIL__ !== 'undefined' && wi
 const APP_IS_ADMIN = APP_RESTRICTED ? !!window.__UNICO_IS_ADMIN__ : true;
 const APP_MODULES = APP_RESTRICTED ? (window.__UNICO_MODULES__||{}) : null;
 function moduleAllowed(key){ return !APP_RESTRICTED || APP_IS_ADMIN || !!(APP_MODULES && APP_MODULES[key]); }
+const ACTIVITY_LOG_MAX = 500;
+function logActivity(action, entity, summary){
+  if(!DB.activityLog) DB.activityLog = [];
+  DB.activityLog.push({ id: uid(), ts: new Date().toISOString(), user: APP_USER_EMAIL || 'local', action, entity, summary });
+  if(DB.activityLog.length > ACTIVITY_LOG_MAX){
+    DB.activityLog = DB.activityLog.slice(DB.activityLog.length - ACTIVITY_LOG_MAX);
+  }
+}
+function stampRecord(obj){
+  obj.updatedBy = APP_USER_EMAIL || 'local';
+  obj.updatedAt = new Date().toISOString();
+  return obj;
+}
 function applyAccessControl(){
   const userNav = document.querySelector('.nav button[data-view="users"]');
   if(userNav) userNav.closest('li').style.display = APP_IS_ADMIN ? '' : 'none';
@@ -1928,7 +2010,7 @@ async function pullFromCloud(silent){
       leads: json.leads||[], deals: json.deals||[], supply: (json.supply||[]).map(migrateSupplyItem), expenses: incomingExpenses,
       contacts: json.contacts||[], quotes: json.quotes||[], proformas: json.proformas||[], taxinvoices: json.taxinvoices||[],
       bankDetails: json.bankDetails||{}, companyProfile: migrateCompanyProfile(json.companyProfile||{}), purchaseOrders: json.purchaseOrders||[], tasks: json.tasks||[],
-      accounts: json.accounts||[], vendors: json.vendors||[], appUsers: json.appUsers||[], settings: migrateSettings(json.settings||defaultSettings()), _accountsSeeded: json._accountsSeeded, _vendorsSeeded: json._vendorsSeeded
+      accounts: json.accounts||[], vendors: json.vendors||[], appUsers: json.appUsers||[], activityLog: json.activityLog||[], settings: migrateSettings(json.settings||defaultSettings()), _accountsSeeded: json._accountsSeeded, _vendorsSeeded: json._vendorsSeeded
     };
     seedAccountsAndVendors(DB);
     localStorage.setItem(STORE_KEY, JSON.stringify(DB));
@@ -2279,15 +2361,18 @@ document.addEventListener('click', (e)=>{
 });
 
 /* ---------- NAV ---------- */
+function setActiveView(key){
+  const btn = document.querySelector('.nav button[data-view="'+key+'"]');
+  if(!btn || btn.closest('li').style.display==='none') return;
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.view').forEach(v=>v.style.display='none');
+  document.getElementById('view-'+key).style.display='block';
+  render();
+  closeMobileNav();
+}
 document.querySelectorAll('.nav button').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.view').forEach(v=>v.style.display='none');
-    document.getElementById('view-'+btn.dataset.view).style.display='block';
-    render();
-    closeMobileNav();
-  });
+  btn.addEventListener('click',()=> setActiveView(btn.dataset.view));
 });
 
 /* ---------- MOBILE NAV DRAWER ---------- */
@@ -2300,6 +2385,27 @@ mobileNavToggle.addEventListener('click', ()=>{
   sidebarEl.classList.contains('open') ? closeMobileNav() : openMobileNav();
 });
 mobileNavBackdrop.addEventListener('click', closeMobileNav);
+
+/* ---------- MOBILE QUICK-ADD (FAB) ---------- */
+const quickAddFab = document.getElementById('quickAddFab');
+const quickAddMenu = document.getElementById('quickAddMenu');
+quickAddFab.addEventListener('click', (e)=>{
+  e.stopPropagation();
+  quickAddMenu.classList.toggle('show');
+});
+document.getElementById('quickAddLeadBtn').addEventListener('click', ()=>{
+  quickAddMenu.classList.remove('show');
+  openLeadModal();
+});
+document.getElementById('quickAddExpenseBtn').addEventListener('click', ()=>{
+  quickAddMenu.classList.remove('show');
+  openExpenseModal();
+});
+document.addEventListener('click', (e)=>{
+  if(quickAddMenu.classList.contains('show') && !quickAddMenu.contains(e.target) && e.target!==quickAddFab){
+    quickAddMenu.classList.remove('show');
+  }
+});
 
 function clock(){
   const d=new Date();
@@ -2369,12 +2475,16 @@ document.getElementById('leadSave').addEventListener('click',()=>{
     notes:document.getElementById('leadNotes').value.trim(),
     created: id? DB.leads.find(l=>l.id===id).created : new Date().toISOString()
   };
+  stampRecord(obj);
   if(id){ DB.leads = DB.leads.map(l=>l.id===id?obj:l); } else { DB.leads.push(obj); }
+  logActivity(id? 'edit':'add', 'Lead', company);
   leadModal.classList.remove('show'); saveData(); toast('Lead saved');
 });
 document.getElementById('leadDelete').addEventListener('click',()=>{
   const id=document.getElementById('leadId').value;
+  const lead = DB.leads.find(l=>l.id===id);
   DB.leads = DB.leads.filter(l=>l.id!==id);
+  logActivity('delete', 'Lead', lead? lead.company : id);
   leadModal.classList.remove('show'); saveData(); toast('Lead deleted');
 });
 function renderLeads(){
@@ -2392,7 +2502,9 @@ function renderLeads(){
   pageInfo.pageRows.forEach(l=>{
     const statusClass = {New:'new',Contacted:'qualified',Qualified:'tech','Not Interested':'lost'}[l.status]||'new';
     const tr=document.createElement('tr');
-    tr.innerHTML = `<td class="num">${l.created? esc(l.created.slice(0,10)):'—'}</td>
+    const ageDays = daysBetween(l.created);
+    const isStale = l.status==='New' && ageDays!=null && ageDays>=3;
+    tr.innerHTML = `<td class="num" style="${isStale?'color:var(--red);':''}">${l.created? esc(l.created.slice(0,10)):'—'}${isStale? ' <span title="No action for '+ageDays+' days">⚠</span>':''}</td>
       <td>${esc(l.company)}</td><td>${esc(l.contact||'—')}</td><td>${esc(l.sector)}</td>
       <td>${esc(l.product||'—')}</td><td>${esc(l.source)}</td>
       <td><span class="badge ${statusClass}">${esc(l.status)}</span></td>
@@ -2481,12 +2593,16 @@ document.getElementById('dealSave').addEventListener('click',()=>{
     notes:document.getElementById('dealNotes').value.trim(),
     created: id? DB.deals.find(d=>d.id===id).created : new Date().toISOString()
   };
+  stampRecord(obj);
   if(id){ DB.deals = DB.deals.map(d=>d.id===id?obj:d); } else { DB.deals.push(obj); }
+  logActivity(id? 'edit':'add', 'Deal', company+' ('+obj.stage+')');
   dealModal.classList.remove('show'); saveData(); toast('Deal saved');
 });
 document.getElementById('dealDelete').addEventListener('click',()=>{
   const id=document.getElementById('dealId').value;
+  const deal = DB.deals.find(d=>d.id===id);
   DB.deals = DB.deals.filter(d=>d.id!==id);
+  logActivity('delete', 'Deal', deal? deal.company : id);
   dealModal.classList.remove('show'); saveData(); toast('Deal deleted');
 });
 let pipelineViewMode = 'board';
@@ -2567,15 +2683,20 @@ function renderPipelineList(){
 
   const tbody = document.getElementById('pipelineListTbody'); tbody.innerHTML='';
   document.getElementById('pipelineListEmpty').style.display = rows.length? 'none':'block';
+  const today = new Date().toISOString().slice(0,10);
   rows.forEach(d=>{
     const tr=document.createElement('tr'); tr.style.cursor='pointer';
+    const isOpen = d.stage!=='Lost' && d.stage!=='PO Received';
+    const ageDays = daysBetween(d.created);
+    const isStale = isOpen && ageDays!=null && ageDays>=30;
+    const closeOverdue = isOpen && d.close && d.close<today;
     tr.innerHTML = `<td>${esc(d.company)}</td><td>${esc(d.product||'—')}</td>
       <td style="max-width:160px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${esc(d.notes||'')}">${esc(d.notes||'—')}</td>
       <td><span class="badge new">${esc(d.stage)}</span></td>
       <td>${esc(d.industry||'—')}</td>
       <td class="num">${inr(d.value)}</td>
-      <td class="num">${esc(d.close||'—')}</td>
-      <td class="num">${d.created? esc(d.created.slice(0,10)):'—'}</td>`;
+      <td class="num" style="${closeOverdue?'color:var(--red);':''}">${esc(d.close||'—')}${closeOverdue?' ⚠':''}</td>
+      <td class="num" style="${isStale?'color:var(--red);':''}">${d.created? esc(d.created.slice(0,10)):'—'}${isStale? ' <span title="'+ageDays+' days in pipeline">⚠</span>':''}</td>`;
     tr.addEventListener('click',()=>openDealModal(d));
     tbody.appendChild(tr);
   });
@@ -2785,7 +2906,7 @@ function renderContacts(){
         ${list.map(c=>`<tr>
             <td><span class="badge tech">${esc(c.department)}</span></td>
             <td>${esc(c.name)}</td><td>${esc(c.designation||'—')}</td>
-            <td class="num">${esc(c.phone||'—')}</td><td>${esc(c.email||'—')}</td>
+            <td class="num">${esc(c.phone||'—')} ${c.phone? waLinkHtml(c.phone):''}</td><td>${esc(c.email||'—')}</td>
             <td class="rowbtns"><button class="btn small" data-email="${c.id}">Email</button> <button class="btn small" data-edit="${c.id}">Edit</button></td>
           </tr>`).join('')}
         </tbody>
@@ -2824,7 +2945,7 @@ function openAccountModal(a){
   document.getElementById('accountState').value = a? (a.state||''):'';
   document.getElementById('accountPincode').value = a? (a.pincode||''):'';
   document.getElementById('accountGstin').value = a? (a.gstin||''):'';
-  document.getElementById('accountDelete').style.display = a? 'inline-block':'none';
+  document.getElementById('accountDelete').style.display = (a && APP_IS_ADMIN)? 'inline-block':'none';
   accountModal.classList.add('show');
 }
 document.getElementById('accountSave').addEventListener('click',()=>{
@@ -2839,22 +2960,103 @@ document.getElementById('accountSave').addEventListener('click',()=>{
     state:document.getElementById('accountState').value.trim(),
     pincode:document.getElementById('accountPincode').value.trim(),
     gstin:document.getElementById('accountGstin').value.trim(),
-    created: id? (DB.accounts.find(x=>x.id===id)||{}).created : new Date().toISOString()
+    created: id? (DB.accounts.find(x=>x.id===id)||{}).created : new Date().toISOString(),
+    receivedPOs: id? ((DB.accounts.find(x=>x.id===id)||{}).receivedPOs || []) : []
   };
+  stampRecord(obj);
   if(id){ DB.accounts = DB.accounts.map(x=>x.id===id?obj:x); } else { DB.accounts.push(obj); }
+  logActivity(id? 'edit':'add', 'Account', company);
   accountModal.classList.remove('show'); saveData(); toast('Account saved');
   if(typeof onAccountSaved==='function') onAccountSaved(obj);
 });
 document.getElementById('accountDelete').addEventListener('click',()=>{
+  if(!APP_IS_ADMIN){ toast('Only an admin can delete an account'); return; }
   const id=document.getElementById('accountId').value;
+  const acc = DB.accounts.find(x=>x.id===id);
   DB.accounts = DB.accounts.filter(x=>x.id!==id);
+  logActivity('delete', 'Account', acc? acc.company : id);
   accountModal.classList.remove('show'); saveData(); toast('Account deleted');
+});
+/* ---------- WhatsApp click-to-chat ---------- */
+function sanitizePhoneForWa(phone){
+  let digits = (phone||'').replace(/[^0-9]/g,'');
+  if(!digits) return '';
+  if(digits.length===10) digits = '91'+digits;
+  else if(digits.length===11 && digits.startsWith('0')) digits = '91'+digits.slice(1);
+  return digits;
+}
+function waLinkHtml(phone){
+  const digits = sanitizePhoneForWa(phone);
+  if(!digits) return '';
+  return `<a href="https://wa.me/${digits}" target="_blank" rel="noopener" title="Chat on WhatsApp" style="text-decoration:none;">💬</a>`;
+}
+
+/* ---------- ACCOUNT — RECEIVED POs (from customer) ---------- */
+function renderAccountPoList(a){
+  const list = a.receivedPOs || [];
+  const box = document.getElementById('accountPoList');
+  document.getElementById('accountPoEmpty').style.display = list.length? 'none':'block';
+  box.innerHTML = list.map(p=>{
+    const link = p.url || p.dataUrl;
+    const label = p.storedOn==='drive' ? `<span style="color:var(--teal); font-size:11px;">Saved to Drive</span>` : `<span style="color:var(--gold); font-size:11px;">Stored locally only</span>`;
+    return `<div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:6px 0; border-bottom:1px solid var(--border);">
+      <div style="font-size:12.5px;">📎 <a href="${link}" target="_blank" rel="noopener">${esc(p.name)}</a> &nbsp; ${label}
+        ${p.uploadedAt? `<span style="color:var(--muted); font-size:11px;"> · ${esc(p.uploadedAt.slice(0,10))}</span>`:''}</div>
+      <button type="button" class="btn small ghost" data-remove-po="${esc(p.id)}">Remove</button>
+    </div>`;
+  }).join('');
+  box.querySelectorAll('[data-remove-po]').forEach(b=>b.addEventListener('click', ()=>{
+    a.receivedPOs = (a.receivedPOs||[]).filter(p=>p.id!==b.dataset.removePo);
+    saveData(); renderAccountPoList(a);
+    toast('PO removed');
+  }));
+}
+document.getElementById('accountPoFile').addEventListener('change', async (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const a = DB.accounts.find(x=>x.id===accountDetailModal.dataset.accountId);
+  if(!a) return;
+  const statusEl = document.getElementById('accountPoUploadStatus');
+  statusEl.style.display='block'; statusEl.textContent = 'Uploading...';
+  try{
+    let dataUrl, mimeType;
+    if(file.type.startsWith('image/')){
+      dataUrl = await compressImageFile(file, 1600, 0.8);
+      mimeType = 'image/jpeg';
+    } else {
+      dataUrl = await fileToBase64(file);
+      mimeType = file.type || 'application/pdf';
+    }
+    const entry = { id: uid(), name: file.name, uploadedAt: new Date().toISOString() };
+    if(CLOUD.url){
+      try{
+        const url = await uploadReceiptToDrive(dataUrl, file.name, mimeType, 'UNICO CRM Received POs');
+        entry.url = url; entry.storedOn = 'drive';
+        toast('PO uploaded to Drive');
+      }catch(err){
+        entry.dataUrl = dataUrl; entry.storedOn = 'local';
+        toast('Drive upload failed — kept locally on this device');
+      }
+    } else {
+      entry.dataUrl = dataUrl; entry.storedOn = 'local';
+    }
+    a.receivedPOs = a.receivedPOs || [];
+    a.receivedPOs.push(entry);
+    saveData();
+    renderAccountPoList(a);
+  }catch(err){
+    toast('Could not read that file');
+  }finally{
+    statusEl.style.display='none';
+    document.getElementById('accountPoFile').value = '';
+  }
 });
 function openAccountDetail(a){
   document.getElementById('accountDetailTitle').textContent = a.company;
   document.getElementById('accountDetailAddress').innerHTML =
     `${esc(a.address||'—')}<br>${esc([a.city,a.state,a.pincode].filter(Boolean).join(', ')||'—')}
-     <br>GSTIN: ${esc(a.gstin||'—')} &nbsp;·&nbsp; Industry: ${esc(a.industry||'Other')}`;
+     <br>GSTIN: ${esc(a.gstin||'—')} &nbsp;·&nbsp; Industry: ${esc(a.industry||'Other')}
+     ${a.updatedBy? `<br><span style="color:var(--muted); font-size:11px;">Last edited by ${esc(a.updatedBy)} on ${esc((a.updatedAt||'').slice(0,10))}</span>`:''}`;
   const key = normCompanyKey(a.company);
   const contacts = DB.contacts.filter(c=>normCompanyKey(c.company)===key);
   const deals = DB.deals.filter(d=>normCompanyKey(d.company)===key);
@@ -2863,7 +3065,7 @@ function openAccountDetail(a){
   const taxinvoices = DB.taxinvoices.filter(t=>normCompanyKey(t.company)===key);
   const section = (title, rows) => rows.length? `<div style="margin-top:12px;"><h3 style="font-family:var(--disp); font-size:13px; color:var(--purple); margin:0 0 6px 0;">${title} (${rows.length})</h3><div style="font-size:12.5px; color:var(--text);">${rows.join('<br>')}</div></div>` : '';
   document.getElementById('accountDetailSections').innerHTML =
-    section('Contacts', contacts.map(c=>`${esc(c.name)} — ${esc(c.designation||c.department)} · ${esc(c.phone||'')} ${esc(c.email||'')}`)) +
+    section('Contacts', contacts.map(c=>`${esc(c.name)} — ${esc(c.designation||c.department)} · ${esc(c.phone||'')} ${c.phone? waLinkHtml(c.phone):''} ${esc(c.email||'')}`)) +
     section('Deals', deals.map(d=>`${esc(d.stage)} — ${inr(d.value)} ${esc(d.product||'')}`)) +
     section('Quotations', quotes.map(q=>`${esc(q.number)} — ${esc(q.date||'')} · ${inr(itemsSubtotal(q.items))}`)) +
     section('Proforma Invoices', proformas.map(p=>`${esc(p.number)} — ${esc(p.date||'')}`)) +
@@ -2871,6 +3073,7 @@ function openAccountDetail(a){
     (!contacts.length && !deals.length && !quotes.length && !proformas.length && !taxinvoices.length
       ? '<div style="color:var(--muted); font-size:12.5px; margin-top:8px;">No linked records yet.</div>' : '');
   accountDetailModal.dataset.accountId = a.id;
+  renderAccountPoList(a);
   accountDetailModal.classList.add('show');
 }
 document.getElementById('accountDetailClose').addEventListener('click',()=>accountDetailModal.classList.remove('show'));
@@ -2949,7 +3152,27 @@ document.getElementById('vendorDelete').addEventListener('click',()=>{
   DB.vendors = DB.vendors.filter(x=>x.id!==id);
   vendorModal.classList.remove('show'); saveData(); toast('Vendor deleted');
 });
+function renderVendorScorecard(){
+  const tbody = document.getElementById('vendorScoreTbody');
+  const names = [...new Set(DB.purchaseOrders.map(p=>p.vendor).filter(Boolean))].sort();
+  document.getElementById('vendorScoreEmpty').style.display = names.length? 'none':'block';
+  tbody.innerHTML = names.map(name=>{
+    const pos = DB.purchaseOrders.filter(p=>p.vendor===name);
+    const received = pos.filter(p=>p.status==='Received');
+    const completionPct = pos.length? Math.round((received.length/pos.length)*100) : 0;
+    const leadTimes = received.filter(p=>p.receivedDate && p.date).map(p=>daysBetween(p.date, p.receivedDate)).filter(d=>d!=null && d>=0);
+    const avgLeadTime = leadTimes.length? Math.round(leadTimes.reduce((a,b)=>a+b,0)/leadTimes.length) : null;
+    const totalValue = pos.reduce((s,p)=> s+recalcTotalsStatic(p.items,p.taxPct).grand, 0);
+    return `<tr>
+      <td>${esc(name)}</td><td class="num">${pos.length}</td><td class="num">${received.length}</td>
+      <td class="num">${completionPct}%</td>
+      <td class="num">${avgLeadTime!=null? avgLeadTime+' days' : '—'}</td>
+      <td class="num">${inr(totalValue)}</td>
+    </tr>`;
+  }).join('');
+}
 function renderVendors(){
+  renderVendorScorecard();
   const search=(document.getElementById('vendorSearch').value||'').toLowerCase();
   let rows = DB.vendors.filter(v=>(v.name+' '+(v.address||'')).toLowerCase().includes(search))
     .sort((a,b)=>a.name.localeCompare(b.name));
@@ -3011,11 +3234,14 @@ document.getElementById('userSave').addEventListener('click',()=>{
     created: id? (DB.appUsers.find(x=>x.id===id)||{}).created : new Date().toISOString()
   };
   if(id){ DB.appUsers = DB.appUsers.map(x=>x.id===id?obj:x); } else { DB.appUsers.push(obj); }
+  logActivity(id? 'edit':'add', 'User', email);
   userModal.classList.remove('show'); saveData(); toast('User saved');
 });
 document.getElementById('userDelete').addEventListener('click',()=>{
   const id=document.getElementById('userId').value;
+  const u = DB.appUsers.find(x=>x.id===id);
   DB.appUsers = DB.appUsers.filter(x=>x.id!==id);
+  logActivity('delete', 'User', u? u.email : id);
   userModal.classList.remove('show'); saveData(); toast('User removed');
 });
 function renderUsers(){
@@ -3033,6 +3259,22 @@ function renderUsers(){
   tbody.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>{
     openUserModal(DB.appUsers.find(x=>x.id===b.dataset.edit));
   }));
+  renderActivityLog();
+}
+function renderActivityLog(){
+  const panel = document.getElementById('activityLogPanel');
+  if(!panel) return;
+  if(!APP_IS_ADMIN){ panel.style.display='none'; return; }
+  panel.style.display='';
+  const entries = (DB.activityLog||[]).slice().sort((a,b)=>(b.ts||'').localeCompare(a.ts||'')).slice(0,200);
+  document.getElementById('activityLogEmpty').style.display = entries.length? 'none':'block';
+  document.getElementById('activityLogTbody').innerHTML = entries.map(e=>`<tr>
+    <td class="num">${e.ts? esc(e.ts.replace('T',' ').slice(0,16)):'—'}</td>
+    <td>${esc(e.user||'—')}</td>
+    <td><span class="badge ${e.action==='delete'?'low':(e.action==='add'?'ok':'new')}">${esc(e.action||'')}</span></td>
+    <td>${esc(e.entity||'')}</td>
+    <td>${esc(e.summary||'')}</td>
+  </tr>`).join('');
 }
 
 /* ---------- FINANCE: EXPENSES ---------- */
@@ -3087,11 +3329,11 @@ function fileToBase64(file){
     reader.readAsDataURL(file);
   });
 }
-async function uploadReceiptToDrive(dataUrl, filename, mimeType){
+async function uploadReceiptToDrive(dataUrl, filename, mimeType, folderName){
   const base64Data = dataUrl.split(',')[1];
   const res = await fetch(CLOUD.url, {
     method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
-    body: JSON.stringify({ token: CLOUD.token, action:'uploadFile', filename, mimeType, base64Data })
+    body: JSON.stringify({ token: CLOUD.token, action:'uploadFile', filename, mimeType, base64Data, folderName })
   });
   const json = await res.json();
   if(json.error) throw new Error(json.error);
@@ -3554,13 +3796,17 @@ document.getElementById('quoteSave').addEventListener('click',()=>{
     notes:document.getElementById('quoteNotes').value.trim(),
     linkedProformaId: id? (DB.quotes.find(x=>x.id===id)||{}).linkedProformaId : ''
   };
+  stampRecord(obj);
   if(id){ DB.quotes = DB.quotes.map(x=>x.id===id?obj:x); } else { DB.quotes.push(obj); }
+  logActivity(id? 'edit':'add', 'Quotation', obj.number+' — '+company);
   quoteModal.classList.remove('show'); saveData();
   toast(dealId && isNewQuote && autoCreateDeal ? 'Quotation saved — deal created in Pipeline' : 'Quotation saved');
 });
 document.getElementById('quoteDelete').addEventListener('click',()=>{
   const id=document.getElementById('quoteId').value;
+  const q = DB.quotes.find(x=>x.id===id);
   DB.quotes = DB.quotes.filter(x=>x.id!==id);
+  logActivity('delete', 'Quotation', q? q.number : id);
   quoteModal.classList.remove('show'); saveData(); toast('Quotation deleted');
 });
 function convertQuoteToProforma(quoteId){
@@ -3722,6 +3968,23 @@ function populatePoLinkOptions(selectedDealId, selectedQuoteId){
 document.getElementById('poShipSameAsBill').addEventListener('change', e=>{
   document.getElementById('poShipToWrap').style.display = e.target.checked? 'none':'block';
 });
+function createPoFromLowStock(item){
+  const priceList = (item.priceList||[]).filter(p=>Number(p.price)>0);
+  const best = priceList.length? priceList.reduce((a,b)=> Number(b.price)<Number(a.price)? b:a) : null;
+  openPoModal();
+  const matchedVendor = best? DB.vendors.find(v=>normCompanyKey(v.name)===normCompanyKey(best.vendor)) : null;
+  if(matchedVendor){
+    populateVendorSelectOptions(matchedVendor.id);
+    fillVendorFieldsFromVendor(matchedVendor);
+  } else if(best){
+    document.getElementById('poVendor').value = best.vendor||'';
+  }
+  const qtyNeeded = Math.max(1, (Number(item.reorder)||0) - (Number(item.stock)||0)) || 1;
+  currentItems = [{ desc:item.name, details:item.description||'', category:item.category||'', qty:qtyNeeded, unit:'Nos', rate: best? Number(best.price):0 }];
+  renderItemsTable('poItemsBody'); wireItemsTable('poItemsBody','poTaxPct','poTotals');
+  recalcTotals('poTaxPct','poTotals');
+  toast('Purchase order pre-filled from low-stock item');
+}
 function openPoModal(po){
   document.getElementById('poModalTitle').textContent = po? 'Edit Purchase Order':'New Purchase Order';
   document.getElementById('poId').value = po? po.id:'';
@@ -3787,6 +4050,13 @@ document.getElementById('poSave').addEventListener('click',()=>{
     terms:document.getElementById('poTerms').value,
     notes:document.getElementById('poNotes').value.trim()
   };
+  // Capture the date a PO first turns "Received" — used for vendor lead-time stats.
+  const existingPo = id? DB.purchaseOrders.find(x=>x.id===id) : null;
+  if(obj.status==='Received'){
+    obj.receivedDate = (existingPo && existingPo.receivedDate) ? existingPo.receivedDate : new Date().toISOString().slice(0,10);
+  } else {
+    obj.receivedDate = existingPo? existingPo.receivedDate : '';
+  }
   if(id){ DB.purchaseOrders = DB.purchaseOrders.map(x=>x.id===id?obj:x); } else { DB.purchaseOrders.push(obj); }
   poModal.classList.remove('show'); saveData(); toast('Purchase order saved');
 });
@@ -4313,15 +4583,21 @@ function renderMasterListBox(boxId, list, removeHandler){
 }
 function renderMasterLists(){
   renderMasterListBox('industryListBox', DB.settings.industries, v=>{
+    if(!APP_IS_ADMIN){ toast('Only an admin can remove master list items'); return; }
     DB.settings.industries = DB.settings.industries.filter(x=>x!==v);
+    logActivity('delete', 'Industry (master list)', v);
     saveData(); renderMasterLists(); populateAllMasterSelects();
   });
   renderMasterListBox('categoryListBox', DB.settings.productCategories, v=>{
+    if(!APP_IS_ADMIN){ toast('Only an admin can remove master list items'); return; }
     DB.settings.productCategories = DB.settings.productCategories.filter(x=>x!==v);
+    logActivity('delete', 'Product Category (master list)', v);
     saveData(); renderMasterLists(); populateAllMasterSelects();
   });
   renderMasterListBox('brandListBox', DB.settings.brands, v=>{
+    if(!APP_IS_ADMIN){ toast('Only an admin can remove master list items'); return; }
     DB.settings.brands = DB.settings.brands.filter(x=>x!==v);
+    logActivity('delete', 'Brand (master list)', v);
     saveData(); renderMasterLists(); populateAllMasterSelects();
   });
 }
@@ -4332,6 +4608,7 @@ function addMasterListValue(inputId, listKey){
   if(DB.settings[listKey].some(x=>x.toLowerCase()===val.toLowerCase())){ toast('Already in the list'); return; }
   DB.settings[listKey].push(val);
   input.value='';
+  logActivity('add', 'Master list ('+listKey+')', val);
   saveData(); renderMasterLists(); populateAllMasterSelects();
 }
 document.getElementById('addIndustryBtn').addEventListener('click', ()=>addMasterListValue('newIndustryInput','industries'));
@@ -4362,7 +4639,45 @@ const CUSTOM_CHART_FIELDS = [
 ];
 let analyticsMonthlyRows = [];
 let customChartState = { field: 'revenue', type: 'line' };
+function renderQuoteFunnel(){
+  const today = new Date().toISOString().slice(0,10);
+  const totalQuotes = DB.quotes.length;
+  const convertedQuotes = DB.quotes.filter(q=>q.linkedProformaId);
+  const conversionPct = totalQuotes? Math.round((convertedQuotes.length/totalQuotes)*100) : 0;
+  const expiredSent = DB.quotes.filter(q=>q.status==='Sent' && quoteExpiryDate(q) && quoteExpiryDate(q)<today);
+
+  const q2pDays = [];
+  DB.proformas.forEach(p=>{
+    if(!p.quoteId) return;
+    const q = DB.quotes.find(x=>x.id===p.quoteId);
+    if(q && q.date && p.date){ const d = daysBetween(q.date, p.date); if(d!=null && d>=0) q2pDays.push(d); }
+  });
+  const avgQ2P = q2pDays.length? Math.round(q2pDays.reduce((a,b)=>a+b,0)/q2pDays.length) : null;
+
+  const p2tDays = [];
+  DB.taxinvoices.forEach(t=>{
+    if(!t.proformaId) return;
+    const p = DB.proformas.find(x=>x.id===t.proformaId);
+    if(p && p.date && t.date){ const d = daysBetween(p.date, t.date); if(d!=null && d>=0) p2tDays.push(d); }
+  });
+  const avgP2T = p2tDays.length? Math.round(p2tDays.reduce((a,b)=>a+b,0)/p2tDays.length) : null;
+
+  const tiles = [
+    {label:'Quote → Order Conversion', value: conversionPct+'%', note: convertedQuotes.length+' of '+totalQuotes+' quotations converted', cls: conversionPct<30 && totalQuotes>0 ? 'low':'ok'},
+    {label:'Quotations Past Validity (still Sent)', value: expiredSent.length, note: expiredSent.length? 'need follow-up':'all current', cls: expiredSent.length? 'low':'ok'},
+    {label:'Avg. Days: Quotation → Proforma', value: avgQ2P!=null? avgQ2P+' days':'—', note: q2pDays.length+' data points', cls:'ok'},
+    {label:'Avg. Days: Proforma → Tax Invoice', value: avgP2T!=null? avgP2T+' days':'—', note: p2tDays.length+' data points', cls:'ok'}
+  ];
+  const row = document.getElementById('quoteFunnelRow'); row.innerHTML='';
+  tiles.forEach(g=>{
+    const div=document.createElement('div'); div.className='gauge '+(g.cls==='low'?'low':'ok');
+    div.innerHTML = `<div class="label">${g.label}</div><div class="value">${g.value}</div>
+      <div class="note ${g.cls==='low'?'warn':''}">${g.note}</div>`;
+    row.appendChild(div);
+  });
+}
 function renderAnalytics(){
+  renderQuoteFunnel();
   const monthsSet = new Set();
   DB.taxinvoices.filter(x=>x.status==='Paid').forEach(x=>monthsSet.add(monthKey(x.paidDate||x.date)));
   DB.expenses.forEach(x=>monthsSet.add(monthKey(x.date)));
@@ -5153,8 +5468,55 @@ document.getElementById('taskSearch').addEventListener('input',()=>{ paginationS
 document.getElementById('taskStatusFilter').addEventListener('change',()=>{ paginationState.task=1; render(); });
 
 /* ---------- DASHBOARD ---------- */
+function quoteExpiryDate(q){
+  if(!q.date) return '';
+  const d = new Date(q.date.slice(0,10));
+  if(isNaN(d.getTime())) return '';
+  d.setDate(d.getDate() + (Number(q.validity)||0));
+  return d.toISOString().slice(0,10);
+}
+function daysBetween(dateStr, refStr){
+  if(!dateStr) return null;
+  const d = new Date(dateStr.slice(0,10));
+  const ref = new Date((refStr||new Date().toISOString()).slice(0,10));
+  if(isNaN(d.getTime())) return null;
+  return Math.round((ref - d) / 86400000);
+}
+function renderFollowUps(){
+  const today = new Date().toISOString().slice(0,10);
+  const overdueTasks = DB.tasks.filter(t=>!t.completed && t.dueDate && t.dueDate<today);
+  const overdueDeals = DB.deals.filter(d=> d.stage!=='Lost' && d.stage!=='PO Received' && d.close && d.close<today);
+  const expiredQuotes = DB.quotes.filter(q=> q.status==='Sent' && quoteExpiryDate(q) && quoteExpiryDate(q)<today);
+  const items = [];
+  overdueTasks.forEach(t=> items.push({
+    kind:'Task', label: t.title, meta: 'Due '+esc(t.dueDate)+' · '+(t.assignedTo?esc(t.assignedTo):'Unassigned'),
+    days: daysBetween(t.dueDate, today), onClick: ()=>{ setActiveView('tasks'); }
+  }));
+  overdueDeals.forEach(d=> items.push({
+    kind:'Deal', label: esc(d.company)+' — '+esc(d.stage), meta: 'Close date was '+esc(d.close)+' · '+inr(d.value),
+    days: daysBetween(d.close, today), onClick: ()=> openDealModal(d)
+  }));
+  expiredQuotes.forEach(q=> items.push({
+    kind:'Quotation', label: esc(q.number)+' — '+esc(q.company), meta: 'Validity expired '+esc(quoteExpiryDate(q))+' · still marked Sent',
+    days: daysBetween(quoteExpiryDate(q), today), onClick: ()=>{ setActiveView('quotes'); }
+  }));
+  items.sort((a,b)=>(b.days||0)-(a.days||0));
+  const box = document.getElementById('followUpsList');
+  if(!items.length){
+    box.innerHTML = '<div class="empty">Nothing overdue — you\'re all caught up.</div>';
+    return;
+  }
+  box.innerHTML = items.map(it=>`
+    <div class="followup-row" style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--gray-light); font-size:13px; cursor:pointer;">
+      <span><span class="badge low" style="margin-right:8px;">${esc(it.kind)}</span>${it.label} <span style="color:var(--muted); font-family:var(--body); font-size:11.5px;">— ${it.meta}</span></span>
+      <span class="num" style="color:var(--red);">${it.days!=null? it.days+'d overdue':''}</span>
+    </div>`).join('');
+  const rows = box.querySelectorAll('.followup-row');
+  rows.forEach((row,i)=> row.addEventListener('click', items[i].onClick));
+}
 function renderDashboard(){
   populateFYFilter();
+  renderFollowUps();
   const openDeals = DB.deals.filter(d=>d.stage!=='Lost' && d.stage!=='PO Received');
   const openValue = openDeals.reduce((s,d)=>s+d.value,0);
   const lowStock = DB.supply.filter(s=>s.stock<=s.reorder);
@@ -5233,10 +5595,17 @@ function renderDashboard(){
     lowList.innerHTML = lowStock.map(s=>{
       const vc = (s.priceList||[]).length;
       const vendorLabel = vc===0? 'no vendor set' : vc===1? esc(s.priceList[0].vendor) : `${vc} vendors`;
-      return `<div style="display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px solid var(--gray-light); font-size:13px;">
+      return `<div style="display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:1px solid var(--gray-light); font-size:13px;">
       <span>${esc(s.name)} <span style="color:var(--muted); font-family:var(--body); font-size:11px;">(${vendorLabel})</span></span>
-      <span class="num" style="color:var(--red);">${s.stock} / reorder at ${s.reorder}</span></div>`;
+      <span style="display:flex; align-items:center; gap:10px;">
+        <span class="num" style="color:var(--red);">${s.stock} / reorder at ${s.reorder}</span>
+        <button type="button" class="btn small primary" data-create-po="${esc(s.id)}">+ Create PO</button>
+      </span></div>`;
     }).join('');
+    lowList.querySelectorAll('[data-create-po]').forEach(b=>b.addEventListener('click', ()=>{
+      const item = DB.supply.find(x=>x.id===b.dataset.createPo);
+      if(item){ setActiveView('supply'); createPoFromLowStock(item); }
+    }));
   }
 }
 
